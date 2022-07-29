@@ -4,15 +4,17 @@ export const ViewWrapper = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.6);
 `
+
 export const ContainerModal = styled.View`
+  display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   background-color: #ffffff;
-  border-radius: 7;
-  padding: 22px;
+  border-radius: 10;
+  padding: 35px 0;
 `
 export const ModalInputs = styled.View`
   display: flex;
@@ -31,10 +33,11 @@ export const TextInputTime = styled.TextInput`
   font-size: 30;
 `
 export const ModalButtons = styled.View`
-  margin: 30px 0 0 0;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 25px;
 `
 
 export const TextDecimal = styled.Text`

@@ -3,7 +3,7 @@
 import styled from 'styled-components/native'
 
 export const ContainerPlacar = styled.View`
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -12,15 +12,24 @@ export const ContainerPlacar = styled.View`
   padding: 25px 0;
 `
 
-export const ContainerTime = styled.View``
+export const ContainerTime = styled.View`
+  margin: 25px 0 25px 0;
+`
 export const NomeTime = styled.Text`
   font-size: 13px;
 `
 export const PlacarTime = styled.Text`
-  font-size: 23px;
+  font-family: 'seven-segment';
+  border: 1px;
+  padding: 0 5px 0 7px;
+  font-size: 46px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
 export const Button = styled.Button`
-  font-size: 23px;
+  font-size: 33px;
 `
 export const Titulo = styled.Text`
   font-size: 23px;

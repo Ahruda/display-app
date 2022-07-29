@@ -4,6 +4,7 @@ import BotaoAtualizarDisplay from '../../global/components/BotaoAtualizarDisplay
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
 import { Container } from '../../global/components/Container/styles'
 import Display from '../../global/components/Display'
+import { Header } from '../../global/styles'
 import {
   ContainerTime,
   PlacarTime,
@@ -20,8 +21,11 @@ export default function Placar() {
     <View
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      <Display></Display>
-      <ButtonFunctionToggle></ButtonFunctionToggle>
+      <Header>
+        <Titulo>Placar</Titulo>
+        <ButtonFunctionToggle></ButtonFunctionToggle>
+      </Header>
+
       <ContainerTime>
         <Titulo>Time A</Titulo>
         <ContainerPlacar>
@@ -35,7 +39,6 @@ export default function Placar() {
           <Button title="+3" onPress={() => setTimeA(timeA + 3)} />
         </ContainerPlacar>
       </ContainerTime>
-
       <ContainerTime>
         <Titulo>Time B</Titulo>
         <ContainerPlacar>
@@ -49,7 +52,6 @@ export default function Placar() {
           <Button title="+3" onPress={() => setTimeB(timeB + 3)} />
         </ContainerPlacar>
       </ContainerTime>
-
       <BotaoAtualizarDisplay></BotaoAtualizarDisplay>
     </View>
   )

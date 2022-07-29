@@ -13,7 +13,7 @@ import {
   ViewWrapper,
 } from './styles'
 import Display from '../../global/components/Display'
-import { BtnGeral, TextBtn } from '../../global/styles'
+import { BtnGeral, TextBtn, Titulo, Header } from '../../global/styles'
 
 const { width } = Dimensions.get('window')
 
@@ -36,8 +36,10 @@ export default function Cronometro() {
     <View
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      <Display></Display>
-      <ButtonFunctionToggle></ButtonFunctionToggle>
+      <Header>
+        <Titulo>Cronometro</Titulo>
+        <ButtonFunctionToggle></ButtonFunctionToggle>
+      </Header>
 
       <BtnGeral
         style={{ marginBottom: 20, marginTop: 50 }}
@@ -104,10 +106,16 @@ export default function Cronometro() {
               />
             </ModalInputs>
             <ModalButtons>
-              <BtnGeral onPress={toggleModalVisibility}>
+              <BtnGeral
+                onPress={toggleModalVisibility}
+                style={{ width: '40%', height: '55%', marginRight: '5%' }}
+              >
                 <TextBtn>Cancelar</TextBtn>
               </BtnGeral>
-              <BtnGeral onPress={toggleModalVisibility}>
+              <BtnGeral
+                onPress={toggleModalVisibility}
+                style={{ width: '40%', height: '55%', marginLeft: '5%' }}
+              >
                 <TextBtn>Confirmar</TextBtn>
               </BtnGeral>
             </ModalButtons>
