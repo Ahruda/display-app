@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Dimensions, View, Modal, Text } from 'react-native'
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
@@ -14,6 +14,7 @@ import {
 } from './styles'
 import Display from '../../global/components/Display'
 import { BtnGeral, TextBtn, Titulo, Header } from '../../global/styles'
+import { ConfigContext } from '../../contexts/config'
 
 const { width } = Dimensions.get('window')
 
@@ -32,24 +33,41 @@ export default function Cronometro() {
     setModalVisible(!isModalVisible)
   }
 
+  const changeStateTimer = () => {
+    if (estadoTimer) {
+      setEstadoTimer(false)
+      //Request para pausar timer
+    } else {
+      setEstadoTimer(true)
+      //Request para voltar timer
+    }
+  }
+
+  const restartTimer = () => {
+    //Request para restartTimer
+  }
+
+  const definirTimer = () => {
+    toggleModalVisibility
+    //request
+  }
+
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <Header>
         <Titulo>Cronometro</Titulo>
-        <ButtonFunctionToggle></ButtonFunctionToggle>
+        <ButtonFunctionToggle funcao={1}></ButtonFunctionToggle>
       </Header>
 
       <BtnGeral
         style={{ marginBottom: 20, marginTop: 50 }}
-        onPress={() =>
-          estadoTimer ? setEstadoTimer(false) : setEstadoTimer(true)
-        }
+        onPress={changeStateTimer}
       >
         <TextBtn>{estadoTimer ? 'Pausar' : 'Iniciar'}</TextBtn>
       </BtnGeral>
-      <BtnGeral style={{ marginBottom: 20 }}>
+      <BtnGeral style={{ marginBottom: 20 }} onPress={restartTimer}>
         <TextBtn>Reiniciar</TextBtn>
       </BtnGeral>
       <BtnGeral style={{ marginBottom: 20 }} onPress={toggleModalVisibility}>
@@ -113,7 +131,7 @@ export default function Cronometro() {
                 <TextBtn>Cancelar</TextBtn>
               </BtnGeral>
               <BtnGeral
-                onPress={toggleModalVisibility}
+                onPress={definirTimer}
                 style={{ width: '40%', height: '55%', marginLeft: '5%' }}
               >
                 <TextBtn>Confirmar</TextBtn>

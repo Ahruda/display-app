@@ -1,8 +1,12 @@
 import { BtnGeral, TextBtn } from '../../styles'
 
-export default function BotaoAtualizarDisplay() {
+interface botaoAtualizarProps {
+  onPressFunction(): void
+}
+
+export default function BotaoAtualizarDisplay(props: botaoAtualizarProps) {
   return (
-    <BtnGeral>
+    <BtnGeral onPress={props.onPressFunction}>
       <TextBtn>Atualizar Display</TextBtn>
     </BtnGeral>
   )

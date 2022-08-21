@@ -17,13 +17,17 @@ export default function Placar() {
   const [timeA, setTimeA] = useState(0)
   const [timeB, setTimeB] = useState(0)
 
+  const updateDisplay = () => {
+    //request
+  }
+
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <Header>
         <Titulo>Placar</Titulo>
-        <ButtonFunctionToggle></ButtonFunctionToggle>
+        <ButtonFunctionToggle funcao={3}></ButtonFunctionToggle>
       </Header>
 
       <ContainerTime>
@@ -52,7 +56,9 @@ export default function Placar() {
           <Button title="+3" onPress={() => setTimeB(timeB + 3)} />
         </ContainerPlacar>
       </ContainerTime>
-      <BotaoAtualizarDisplay></BotaoAtualizarDisplay>
+      <BotaoAtualizarDisplay
+        onPressFunction={updateDisplay}
+      ></BotaoAtualizarDisplay>
     </View>
   )
 }

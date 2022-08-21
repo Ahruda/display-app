@@ -1,10 +1,36 @@
+import { useState } from 'react'
+import { useContext, useEffect } from 'react'
 import Toggle from 'react-native-toggle-element'
+import { ConfigContext } from '../../../contexts/config'
 
-export default function ButtonFunctionToggle() {
+interface ToggleProps {
+  funcao: number
+}
+
+export default function ButtonFunctionToggle(props: ToggleProps) {
+  const { funcao, setFuncao, estadoDisplay, setEstadoDisplay } =
+    useContext(ConfigContext)
+
+  const buttonFunction = () => {
+    console.log('hey!!!')
+    if (estadoDisplay) {
+      if (props.funcao == funcao) {
+        setEstadoDisplay(false)
+      } else {
+        setFuncao(props.funcao)
+      }
+    } else {
+      setEstadoDisplay(true)
+      if (props.funcao != funcao) {
+        setFuncao(props.funcao)
+      }
+    }
+  }
+
   return (
     <Toggle
-      value={true}
-      //onPress={}
+      value={estadoDisplay && props.funcao == funcao}
+      onPress={buttonFunction}
       style={{}}
       leftTitle="OFF"
       rightTitle="ON"

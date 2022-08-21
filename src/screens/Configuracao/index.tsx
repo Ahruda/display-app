@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import MaskInput from 'react-native-mask-input'
+import axios from 'axios'
 
 import BotaoAtualizarDisplay from '../../global/components/BotaoAtualizarDisplay'
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
@@ -28,6 +29,22 @@ const IP_MASK = [
 
 export default function Configuracao() {
   const [ip, setIp] = useState('')
+
+  const atualizarDisplay = () => {
+    axios
+      .post(`http://${ip}/delay`, {
+        delay: 1,
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          console.log('sucesso')
+        }
+      })
+      .catch(function (error) {
+        console.log('Erro')
+      })
+  }
+
   return (
     <View
       style={{
@@ -45,7 +62,9 @@ export default function Configuracao() {
         value={ip}
         mask={IP_MASK}
       />
-      <BotaoAtualizarDisplay></BotaoAtualizarDisplay>
+      <BotaoAtualizarDisplay
+        onPressFunction={atualizarDisplay}
+      ></BotaoAtualizarDisplay>
     </View>
   )
 }
