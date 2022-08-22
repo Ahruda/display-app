@@ -1,12 +1,13 @@
+import axios from 'axios'
 import { useEffect } from 'react'
 import { createContext, useState } from 'react'
 
 interface configContextProps {
   funcao: number
   setFuncao: Function
-  estadoDisplay: boolean
+  estadoDisplay: number
   setEstadoDisplay: Function
-  ip: number
+  ip: string
   setIp: Function
 }
 
@@ -14,18 +15,21 @@ export const ConfigContext = createContext<configContextProps>({})
 
 export function ConfigProvider({ children }: any) {
   const [funcao, setFuncao] = useState(0)
-  const [estadoDisplay, setEstadoDisplay] = useState(false)
-  const [ip, setIp] = useState(0)
+  const [estadoDisplay, setEstadoDisplay] = useState(0)
+  const [ip, setIp] = useState('')
 
   useEffect(() => {
-    console.log('Funcao mudou para ' + funcao)
-    //request para mudar funcao
-  }, [funcao])
-
-  useEffect(() => {
-    console.log('Display mudou para ' + estadoDisplay)
-    //request para mudar estadoDisplay
-  }, [estadoDisplay])
+    axios
+    .post(`http://${ip}/alterarfuncao`, {
+      "estado_display": estadoDisplay,
+      "funcao": funcao
+  })
+    .then(function (response) {
+      if (response.status === 200) {
+        
+      }
+    })
+  }, [funcao, estadoDisplay])
 
   return (
     <ConfigContext.Provider

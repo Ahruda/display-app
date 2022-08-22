@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import axios from 'axios'
+import { useContext, useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
+import { ConfigContext } from '../../contexts/config'
 import BotaoAtualizarDisplay from '../../global/components/BotaoAtualizarDisplay'
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
 import { Container } from '../../global/components/Container/styles'
@@ -14,11 +16,27 @@ import {
 } from './styles'
 
 export default function Placar() {
+  const { ip } = useContext(ConfigContext)
   const [timeA, setTimeA] = useState(0)
   const [timeB, setTimeB] = useState(0)
 
   const updateDisplay = () => {
-    //request
+  
+    axios
+      .post(`http://${ip}/alterarNumeros`, {
+        numero_1: timeB % 10,
+        numero_2: timeB / 10,
+        numero_3: 0,
+        numero_4: 0,
+        numero_5: timeA % 10,
+        numero_6: timeA / 10,
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        
+      }
+    })
+    
   }
 
   return (

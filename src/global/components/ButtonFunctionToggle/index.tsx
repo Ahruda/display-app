@@ -12,15 +12,14 @@ export default function ButtonFunctionToggle(props: ToggleProps) {
     useContext(ConfigContext)
 
   const buttonFunction = () => {
-    console.log('hey!!!')
     if (estadoDisplay) {
       if (props.funcao == funcao) {
-        setEstadoDisplay(false)
+        setEstadoDisplay(0)
       } else {
         setFuncao(props.funcao)
       }
     } else {
-      setEstadoDisplay(true)
+      setEstadoDisplay(1)
       if (props.funcao != funcao) {
         setFuncao(props.funcao)
       }

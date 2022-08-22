@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Text, View } from 'react-native'
 import MaskInput from 'react-native-mask-input'
 import axios from 'axios'
@@ -8,6 +8,7 @@ import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
 import { Container } from '../../global/components/Container/styles'
 import Display from '../../global/components/Display'
 import { Input } from './styles'
+import { ConfigContext } from '../../contexts/config'
 
 const IP_MASK = [
   /\d/,
@@ -28,21 +29,12 @@ const IP_MASK = [
 ]
 
 export default function Configuracao() {
-  const [ip, setIp] = useState('')
+
+  const [ipMask, setIpMask] = useState('')
+  const { setIp } = useContext(ConfigContext)
 
   const atualizarDisplay = () => {
-    axios
-      .post(`http://${ip}/delay`, {
-        delay: 1,
-      })
-      .then(function (response) {
-        if (response.status === 200) {
-          console.log('sucesso')
-        }
-      })
-      .catch(function (error) {
-        console.log('Erro')
-      })
+    setIp(ipMask)
   }
 
   return (
@@ -58,8 +50,8 @@ export default function Configuracao() {
       <MaskInput
         placeholder="IP do display"
         keyboardType="numeric"
-        onChangeText={setIp}
-        value={ip}
+        onChangeText={setIpMask}
+        value={ipMask}
         mask={IP_MASK}
       />
       <BotaoAtualizarDisplay

@@ -15,10 +15,13 @@ import {
 import Display from '../../global/components/Display'
 import { BtnGeral, TextBtn, Titulo, Header } from '../../global/styles'
 import { ConfigContext } from '../../contexts/config'
+import axios from 'axios'
 
 const { width } = Dimensions.get('window')
 
 export default function Cronometro() {
+  const { ip } = useContext(ConfigContext)
+
   const [isModalVisible, setModalVisible] = useState(false)
   const [estadoTimer, setEstadoTimer] = useState(false)
 
@@ -34,17 +37,26 @@ export default function Cronometro() {
   }
 
   const changeStateTimer = () => {
-    if (estadoTimer) {
-      setEstadoTimer(false)
-      //Request para pausar timer
-    } else {
-      setEstadoTimer(true)
-      //Request para voltar timer
-    }
+    axios
+      .post(`http://${ip}/pausarCronometro`, {})
+      .then(function (response) {
+        if (response.status === 200) {
+          estadoTimer ? setEstadoTimer(false) : setEstadoTimer(true)
+        }
+      })
   }
 
   const restartTimer = () => {
-    //Request para restartTimer
+    axios
+      .post(`http://${ip}/reiniciarCronometro`, {})
+      .then(function (response) {
+        if (response.status === 200) {
+          console.log('sucesso')
+        }
+      })
+      .catch(function (error) {
+        console.log('Erro')
+      })
   }
 
   const definirTimer = () => {
