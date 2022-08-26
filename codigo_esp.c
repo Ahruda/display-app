@@ -518,6 +518,17 @@ void setup()
     });
     server.addHandler(changeDelay);
 
+    AsyncCallbackJsonWebHandler *iniciarSensores =
+    new AsyncCallbackJsonWebHandler("/iniciarSensores", [](AsyncWebServerRequest *request, String json) {                             
+
+        tempo_inicial = 0;
+        arraySensor.clear();
+        sensores_finalizados = 0;
+        
+        request->send(200, "text/plain"); 
+    });
+    server.addHandler(iniciarSensores);
+
     server.on("/dadosSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
 
         String json = "";
@@ -556,15 +567,13 @@ void loop()
                 funcao_cronometro();
                 break;
             case 2:
-            /*
                 if(tempo_inicial != 0 && sensores_finalizados == 0){
                     separarNumeroComposto(millis() - tempo_inicial);
                     multiplexarDisplay();
                 } else if (sensores_finalizados == 1) {
-                    separarNumeroComposto(valores_sensor["final"]);
+                    separarNumeroComposto(arraySensor[arraySensor.size()-1]);
                     multiplexarDisplay();
                 }
-*/
                 break;
             case 3:
                 funcao_placar();

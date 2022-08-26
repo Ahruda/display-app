@@ -31,19 +31,22 @@ export default function ButtonFunctionToggle(props: ToggleProps) {
       value={(estadoDisplay ? true : false) && props.funcao == funcao}
       onPress={buttonFunction}
       style={{}}
-      leftTitle="OFF"
-      rightTitle="ON"
+      //leftTitle="OFF"
+      rightTitle="Ativo"
       trackBar={{
-        activeBackgroundColor: '#2c8af2',
-        inActiveBackgroundColor: '#a1a1a1',
+        activeBackgroundColor: '#9fcafa',
+        inActiveBackgroundColor: '#dadada',
         borderActiveColor: '#2277da',
-        borderInActiveColor: '#585858',
+        borderInActiveColor: '#9e9e9e',
         borderWidth: 3,
         width: 120,
+        height: 30,
+        radius: 50,
       }}
       thumbButton={{
-        activeBackgroundColor: '#e4e4e4',
-        inActiveBackgroundColor: '#e4e4e4',
+        activeBackgroundColor: '#bfdbfb',
+        inActiveBackgroundColor: '#c2c2c2',
+
       }}
     />
   )

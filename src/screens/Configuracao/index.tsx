@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Text, View } from 'react-native'
+import { Text, ToastAndroid, View } from 'react-native'
 import MaskInput from 'react-native-mask-input'
 import axios from 'axios'
 
@@ -31,10 +31,26 @@ const IP_MASK = [
 export default function Configuracao() {
 
   const [ipMask, setIpMask] = useState('')
-  const { setIp } = useContext(ConfigContext)
+  const { setIp, ip } = useContext(ConfigContext)
+
+  const showToast = (mensagem: string) => {
+    ToastAndroid.show(mensagem, ToastAndroid.SHORT)
+  }
 
   const atualizarDisplay = () => {
+
     setIp(ipMask)
+
+    axios
+    .get(`http://${ip}/statusSensores`)
+    .then(function (response) {
+      if (response.status === 200) {
+        showToast("Conexão feita com sucesso!")
+      }
+    })
+    .catch(function (error) {
+      showToast("Ocorreu um erro ao realizar a conexão no IP informado")
+    })
   }
 
   return (

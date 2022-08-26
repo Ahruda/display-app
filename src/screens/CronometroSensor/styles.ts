@@ -27,5 +27,15 @@ export const Scroll = styled.ScrollView`
 
 export const Status = styled.Text`
   font-size: 16px;
+  font-weight: bold;
+`
 
+
+export const TabelaDados = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px;
+  padding: 10px;
+  margin-bottom: 56px;
 `

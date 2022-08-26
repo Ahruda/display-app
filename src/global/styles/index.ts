@@ -2,14 +2,15 @@ import styled from 'styled-components/native'
 
 export const BtnGeral = styled.TouchableOpacity`
   background-color: #2c8af2;
-  border-radius: 16px;
+  border-radius: 10px;
   width: 60%;
-  height: 60px;
+  height: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 36px;
+  margin-top: 16px;
+
 `
 
 export const TextBtn = styled.Text`
