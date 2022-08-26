@@ -28,7 +28,7 @@ export default function ButtonFunctionToggle(props: ToggleProps) {
 
   return (
     <Toggle
-      value={estadoDisplay && props.funcao == funcao}
+      value={(estadoDisplay ? true : false) && props.funcao == funcao}
       onPress={buttonFunction}
       style={{}}
       leftTitle="OFF"

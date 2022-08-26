@@ -56,6 +56,7 @@ export default function Configuracao() {
       />
       <BotaoAtualizarDisplay
         onPressFunction={atualizarDisplay}
+        titulo="Atualizar configuração"
       ></BotaoAtualizarDisplay>
     </View>
   )

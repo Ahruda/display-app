@@ -76,6 +76,7 @@ export default function Placar() {
       </ContainerTime>
       <BotaoAtualizarDisplay
         onPressFunction={updateDisplay}
+        titulo="Atualizar display"
       ></BotaoAtualizarDisplay>
     </View>
   )

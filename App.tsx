@@ -31,7 +31,7 @@ export default function App() {
         <SafeAreaView>
           <Display></Display>
         </SafeAreaView>
-        <NavigationContainer>
+        <NavigationContainer style={{position: 'absolute'}}>
           <Tab.Navigator
             screenOptions={{
               tabBarActiveTintColor: '#2c8af2',

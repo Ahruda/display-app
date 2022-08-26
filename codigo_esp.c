@@ -16,6 +16,9 @@
 const char *ssid = "IFPCS_Container";
 const char *password = "containerIfPocos2018";
 
+const char *ssid = "GALBIERE";
+const char *password = "26106201";
+
 const char *ssid = "AP 22 2.4G";
 const char *password = "galbiere";
 */
@@ -61,9 +64,26 @@ char ent[8];
 
 int vetorNumeros[6] = {1, 2, 3, 4, 5, 6};
 
-DynamicJsonDocument valores_sensor(1024);
+//DynamicJsonDocument valores_sensor(1024);
+
+const size_t CAPACITY = JSON_ARRAY_SIZE(20);
+StaticJsonDocument<CAPACITY> doc;
+JsonArray arraySensor = doc.to<JsonArray>();
 
 AsyncWebServer server(80);
+
+class Sensor{
+   
+  public:
+   
+    String nome;
+    int valor;
+     
+    Sensor (String t_nome, int t_valor){
+      nome = t_nome;
+      valor = t_valor;
+    }
+};
 
 void escreverNumero(int numero) {
 
@@ -309,11 +329,9 @@ void IRAM_ATTR sensorInicialContador() {
 
     if(funcao == 2 && estado_display != 0 && tempo_inicial == 0) {
 
-        Serial.println("iniciar contagem");
-
         tempo_inicial = millis();
         timestamp_ultimo_acionamento = millis();
-
+        contador_acionamentos = 0;
         digitalWrite(pin_led_estado_sensor, HIGH);
 
     }
@@ -326,12 +344,10 @@ void IRAM_ATTR sensorIntermediarioContador() {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
 
-            Serial.println("sensor intermediario");
-
             timestamp_ultimo_acionamento = millis();
-            sprintf(ent, "%s%d", "sensor_", contador_acionamentos); 
-            valores_sensor[ent] = timestamp_ultimo_acionamento - tempo_inicial;
-
+            sprintf(ent, "%d", contador_acionamentos); 
+            //valores_sensor[ent] = timestamp_ultimo_acionamento - tempo_inicial;
+            arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
             contador_acionamentos++;
             
         }
@@ -346,8 +362,10 @@ void IRAM_ATTR sensorFinalContador() {
         Serial.println("sensor final");
 
         timestamp_ultimo_acionamento = millis();
-        sprintf(ent, "%s%d", "sensor_", contador_acionamentos); 
-        valores_sensor[ent] = timestamp_ultimo_acionamento - tempo_inicial;
+        //sprintf(ent, "%s%d", "sensor_", contador_acionamentos); 
+        //sprintf(ent, "%d", contador_acionamentos); 
+        //valores_sensor["final"] = timestamp_ultimo_acionamento - tempo_inicial;
+        arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
         contador_acionamentos++;
 
         digitalWrite(pin_led_estado_sensor, LOW);
@@ -392,12 +410,17 @@ void setup()
     /*
         IPAddress local_IP(10, 14, 160, 184);
         IPAddress gateway(10, 14, 161, 250);
+
+        IPAddress local_IP(192, 168, 200, 184);
+        IPAddress gateway(192, 168, 200, 1);
+
         IPAddress local_IP(192, 168, 100, 184);
         IPAddress gateway(192, 168, 100, 1);
     */
 
     IPAddress local_IP(192, 168, 200, 184);
     IPAddress gateway(192, 168, 200, 1);
+
     IPAddress subnet(255, 255, 0, 0);
 
     if (!WiFi.config(local_IP, gateway, subnet))
@@ -497,10 +520,21 @@ void setup()
 
     server.on("/dadosSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
 
+        String json = "";
+
+        serializeJson(arraySensor, json);
+        request->send(200, "application/json", json);
+
+    });
+
+    server.on("/statusSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
+
         DynamicJsonDocument doc(1024);
         String json = "";
-        valores_sensor["sensor_final"] = sensores_finalizados;
-        serializeJson(valores_sensor, json);
+
+        doc["sensores_finalizados"] = sensores_finalizados;
+
+        serializeJson(doc, json);
         request->send(200, "application/json", json);
 
     });
@@ -522,7 +556,15 @@ void loop()
                 funcao_cronometro();
                 break;
             case 2:
-                
+            /*
+                if(tempo_inicial != 0 && sensores_finalizados == 0){
+                    separarNumeroComposto(millis() - tempo_inicial);
+                    multiplexarDisplay();
+                } else if (sensores_finalizados == 1) {
+                    separarNumeroComposto(valores_sensor["final"]);
+                    multiplexarDisplay();
+                }
+*/
                 break;
             case 3:
                 funcao_placar();
