@@ -31,7 +31,7 @@ const IP_MASK = [
 export default function Configuracao() {
 
   const [ipMask, setIpMask] = useState('')
-  const { setIp, ip } = useContext(ConfigContext)
+  const { setIp, ip, setEstadoDisplay, setFuncao, zerarDisplay } = useContext(ConfigContext)
 
   const showToast = (mensagem: string) => {
     ToastAndroid.show(mensagem, ToastAndroid.SHORT)
@@ -45,6 +45,9 @@ export default function Configuracao() {
     .get(`http://${ip}/statusSensores`)
     .then(function (response) {
       if (response.status === 200) {
+        setEstadoDisplay(0)
+        setFuncao(0)
+        zerarDisplay()
         showToast("Conexão feita com sucesso!")
       }
     })

@@ -20,7 +20,7 @@ import axios from 'axios'
 const { width } = Dimensions.get('window')
 
 export default function Cronometro() {
-  const { ip } = useContext(ConfigContext)
+  const { funcao, estadoDisplay, ip } = useContext(ConfigContext)
 
   const [isModalVisible, setModalVisible] = useState(false)
   const [estadoTimer, setEstadoTimer] = useState(false)
@@ -33,20 +33,25 @@ export default function Cronometro() {
   const [inputValue6, setInputValue6] = useState('')
 
   const toggleModalVisibility = () => {
-    setModalVisible(!isModalVisible)
+    if(funcao == 1 && estadoDisplay == 1){
+      setModalVisible(!isModalVisible)
+    }
   }
 
   const changeStateTimer = () => {
-    axios
+    if(funcao == 1 && estadoDisplay == 1){
+      axios
       .post(`http://${ip}/pausarCronometro`, {})
       .then(function (response) {
         if (response.status === 200) {
           estadoTimer ? setEstadoTimer(false) : setEstadoTimer(true)
         }
       })
+    }
   }
 
   const restartTimer = () => {
+    if(funcao == 1 && estadoDisplay == 1){
     axios
       .post(`http://${ip}/reiniciarCronometro`, {})
       .then(function (response) {
@@ -57,25 +62,29 @@ export default function Cronometro() {
       .catch(function (error) {
         console.log('Erro')
       })
+    }
   }
 
   const definirTimer = () => {
+    if(funcao == 1 && estadoDisplay == 1){
     toggleModalVisibility
     //request
+    }
   }
 
-  return (
-    <View
+
+  return(
+      <View
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <Header>
         <Titulo>Cronometro</Titulo>
         <ButtonFunctionToggle funcao={1}></ButtonFunctionToggle>
       </Header>
-
       <BtnGeral
         style={{ marginBottom: 20, marginTop: 50 }}
         onPress={changeStateTimer}
+        
       >
         <TextBtn>{estadoTimer ? 'Pausar' : 'Iniciar'}</TextBtn>
       </BtnGeral>
@@ -153,5 +162,5 @@ export default function Cronometro() {
         </ViewWrapper>
       </Modal>
     </View>
-  )
+    )
 }

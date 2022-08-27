@@ -11,9 +11,9 @@ import { Linha, Scroll, Status, TabelaDados } from './styles'
 export default function CronometroSensor() {
   const { funcao, estadoDisplay,ip } = useContext(ConfigContext)
   const [dadosSensor, setDadosSensor] = useState<number[]>([])
-  const [statusSensores, setStatusSensores] = useState(0)
-  const [statusRequisicao, setStatusRequisicao] = useState(0)
-  const [numero, setNumero] = useState(1)
+  const [statusSensores, setStatusSensores] = useState(0) // 0 para sensores não finalizados
+  const [statusRequisicao, setStatusRequisicao] = useState(0) // 1 para req em andamento
+  //const [numero, setNumero] = useState(1)
 
   function timeout(delay: number) {
     return new Promise( res => {
@@ -21,48 +21,68 @@ export default function CronometroSensor() {
     });
   }
 
+  /*
+  useEffect(() => {
+    console.log("entrou no useefect")
+
+      axios.post(`http://192.168.200.184/interromperSensores`, {})
+      .then(function (response) {
+        if (response.status === 200) {
+
+          
+        }
+      })
+      
+  }, [estadoDisplay, funcao])
+*/
   const iniciarSensores = () => {
-    axios.post(`http://192.168.200.184/iniciarSensores`, {}).then(function (response) {
-      if (response.status === 200) {
-        setStatusSensores(0)
-        setStatusRequisicao(1)
-        verificarDadosSensores()
-        
-      }
-    })
+    if(funcao == 2 && estadoDisplay == 1){
+      axios.post(`http://192.168.200.184/iniciarSensores`, {}).then(function (response) {
+        if (response.status === 200) {
+          setStatusSensores(0) // sensores não finalizaram
+          setStatusRequisicao(1) // requisicao em andamento
+          verificarDadosSensores()
+          
+        }
+      })
+    }
   }
 
   const interromperSensores = () => {
-    axios.post(`http://192.168.200.184/iniciarSensores`, {}).then(function (response) {
-      if (response.status === 200) {
-        setStatusSensores(0)
-        setStatusRequisicao(1)
-        verificarDadosSensores()
-        
-      }
-    })
+    if(funcao == 2 && estadoDisplay == 1){
+      axios.post(`http://192.168.200.184/interromperSensores`, {})
+      .then(function (response) {
+        if (response.status === 200) {
+
+          
+        }
+      })
+    }
   }
 
   const verificarDadosSensores =  () => {
-    axios
+    if(funcao == 2 && estadoDisplay == 1){
+      axios
       .get(`http://192.168.200.184/dadosSensores`)
       .then(function (response) {
         if (response.status === 200) {
           setDadosSensor(response.data)
-           verificarStatusSensores()
+          verificarStatusSensores()
         }
       })
       .catch(function (error) {
         console.log(error)
       })
+    }
   }
 
-  const verificarStatusSensores = ()  => {
+  const verificarStatusSensores = () => {
+    if(funcao == 2 && estadoDisplay == 1){
     axios
       .get(`http://192.168.200.184/statusSensores`)
       .then(async function (response) {
 
-        console.log('entrou no timeout')
+        console.log('entrou no timeout ' +estadoDisplay)
         await timeout(2000);
         console.log('saiu do timeout')
 
@@ -76,105 +96,106 @@ export default function CronometroSensor() {
           .get(`http://192.168.200.184/dadosSensores`)
           .then(function (response) {
             if (response.status === 200) {
+              console.log("ultima rotina---------------")
               setDadosSensor(response.data)
+              setStatusSensores(1)        
+              setStatusRequisicao(0)
             }
           })
           .catch(function (error) {
             console.log(error)
           })
       
-          setStatusSensores(1)        
         }
       })
       .catch(function (error) {
         console.log(error)
       })
-
+    }
   }
 
-  if (funcao !== 2 && estadoDisplay === 0) {
-    return (
+  return (
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Header>
+        <Titulo>Sensores</Titulo>
+        <ButtonFunctionToggle funcao={2}></ButtonFunctionToggle>
+      </Header>
+
+      <BotaoAtualizarDisplay
+          onPressFunction = {
+            statusSensores == 1 
+              ? iniciarSensores 
+              :  statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1
+                ? interromperSensores 
+                : iniciarSensores}
+          titulo = {
+            statusSensores == 1 
+              ? 'Reiniciar Sensores' 
+              : statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1
+                ? 'Interromper Sensores' 
+                : 'Iniciar Sensores'}
+
+        ></BotaoAtualizarDisplay>
+
       <View
         style={{
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '80%',
           alignItems: 'center',
+          padding: 10,
         }}
       >
-        <Header>
-          <Titulo>Sensores</Titulo>
-          <ButtonFunctionToggle funcao={2}></ButtonFunctionToggle>
-        </Header>
-      </View>
-    )
-  } else {
 
-    return (
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+        
+
+      {/* <ActivityIndicator
+          size="large"
+          color="#0000ff"
+          style={{ paddingRight: 10 }}
+        /> */}
+      
+      <Status>Status: </Status>  
+      
+      {(funcao == 2 && estadoDisplay == 1 && statusRequisicao == 1) 
+        ? (statusSensores == 1 )
+          ? <Status>Sensores Finalizados!</Status> 
+          : <Status>Coletando dados...</Status>
+        : <Status>Sensores desabilitados!</Status>}
+      
+      </View>
+
+      <Scroll
+        contentContainerStyle={{ alignItems: 'center', paddingBottom: 150 }}
       >
-        <Header>
-          <Titulo>Sensores</Titulo>
-          <ButtonFunctionToggle funcao={2}></ButtonFunctionToggle>
-        </Header>
+
+        <TabelaDados>
+          <Text style={{ paddingBottom: 10}}>Dados dos sensores</Text>
         
-        <BotaoAtualizarDisplay
-            onPressFunction={statusSensores == 1 ? iniciarSensores :  statusRequisicao == 1 ? interromperSensores : iniciarSensores}
-            titulo={statusSensores == 1 ? 'Reiniciar Sensores' :  statusRequisicao == 1 ? 'Interromper Sensores' : 'Iniciar Sensores'}
-          ></BotaoAtualizarDisplay>
 
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            width: '80%',
-            alignItems: 'center',
-            padding: 10,
-          }}
-        >
+          {dadosSensor.map((item, index) => {
+            
+            return (
+              <Linha key={index + 1}>
+                <Text>Sensor #{index + 1}</Text>
+                <Text>{item} ms</Text>
+              </Linha>
+            )
+          })}
 
-          
+        </TabelaDados>
 
-        {/* <ActivityIndicator
-            size="large"
-            color="#0000ff"
-            style={{ paddingRight: 10 }}
-          /> */}
-        
-        <Status>Status: </Status>  
-        {statusSensores == 1 ? <Status>Sensores Finalizados!</Status> : <Status>Coletando dados...</Status>}
-        
-        </View>
-
-        <Scroll
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 150 }}
-        >
-
-          <TabelaDados>
-            <Text style={{ paddingBottom: 10}}>Dados dos sensores</Text>
-          
-
-            {dadosSensor.map((item, index) => {
-              
-              return (
-                <Linha key={index + 1}>
-                  <Text>Sensor #{index + 1}</Text>
-                  <Text>{item} ms</Text>
-                </Linha>
-              )
-            })}
-
-          </TabelaDados>
-
-        </Scroll>
+      </Scroll>
 
 
-      </View>
-    )
-  }
+    </View>
+  )
 }
+

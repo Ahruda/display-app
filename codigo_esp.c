@@ -49,7 +49,7 @@ int tempo_delay = 100;
 int estado_display = 0; // Ligado ou desligado
 int funcao = 0;
 int estado_multiplexacao = 0;
-int pausar_cronometro = 0;
+int pausar_cronometro = 1;
 int tempo_inicial = 0;
 
 int contador_acionamentos = 0;
@@ -449,13 +449,12 @@ void setup()
         DynamicJsonDocument data(1024);
         deserializeJson(data, json);
 
-        // Seta os numeros no display
         estado_display = data["estado_display"];
         funcao = data["funcao"];
-
-        Serial.println(estado_display);
-        Serial.println(funcao);
-
+        tempo_inicial = 0;
+        arraySensor.clear();
+        sensores_finalizados = 1;
+        
         request->send(200, "text/plain"); 
 
     });
@@ -529,6 +528,15 @@ void setup()
     });
     server.addHandler(iniciarSensores);
 
+    AsyncCallbackJsonWebHandler *interromperSensores =
+    new AsyncCallbackJsonWebHandler("/interromperSensores", [](AsyncWebServerRequest *request, String json) {                             
+        
+        sensores_finalizados = 1;
+
+        request->send(200, "text/plain"); 
+    });
+    server.addHandler(interromperSensores);
+
     server.on("/dadosSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
 
         String json = "";
@@ -567,7 +575,7 @@ void loop()
                 funcao_cronometro();
                 break;
             case 2:
-                if(tempo_inicial != 0 && sensores_finalizados == 0){
+                if (tempo_inicial != 0 && sensores_finalizados == 0) {
                     separarNumeroComposto(millis() - tempo_inicial);
                     multiplexarDisplay();
                 } else if (sensores_finalizados == 1) {
@@ -577,6 +585,9 @@ void loop()
                 break;
             case 3:
                 funcao_placar();
+                break;
+            default:
+                standbyDisplay();
                 break;
         }
     }
