@@ -23,8 +23,8 @@ const char *ssid = "AP 22 2.4G";
 const char *password = "galbiere";
 */
 
-const char *ssid = "GALBIERE";
-const char *password = "26106201";
+const char *ssid = "AP 22 2.4G";
+const char *password = "galbiere";
 
 // Pinos do display de 7 segmentos
 const int pin_a = 33;
@@ -45,7 +45,7 @@ const int pin_entrada_sensor_intermediario = 35;
 const int pin_entrada_sensor_final = 27;
 const int pin_led_estado_sensor = 13;
 
-int tempo_delay = 100;
+int tempo_delay = 500;
 int estado_display = 0; // Ligado ou desligado
 int funcao = 0;
 int estado_multiplexacao = 0;
@@ -418,8 +418,8 @@ void setup()
         IPAddress gateway(192, 168, 100, 1);
     */
 
-    IPAddress local_IP(192, 168, 200, 184);
-    IPAddress gateway(192, 168, 200, 1);
+    IPAddress local_IP(192, 168, 100, 184);
+    IPAddress gateway(192, 168, 100, 1);
 
     IPAddress subnet(255, 255, 0, 0);
 
@@ -466,6 +466,19 @@ void setup()
         DynamicJsonDocument data(1024);
         deserializeJson(data, json);
 
+        segundos = data["segundos"];
+
+        request->send(200, "text/plain"); 
+
+    });
+    server.addHandler(alterarNumeros);
+
+    AsyncCallbackJsonWebHandler *alterarNumerosPlacar =
+    new AsyncCallbackJsonWebHandler("/alterarNumerosPlacar", [](AsyncWebServerRequest *request, String json) {
+                              
+        DynamicJsonDocument data(1024);
+        deserializeJson(data, json);
+
         vetorNumeros[0] = data["numero_1"];
         vetorNumeros[1] = data["numero_2"];
         vetorNumeros[2] = data["numero_3"];
@@ -476,7 +489,7 @@ void setup()
         request->send(200, "text/plain"); 
 
     });
-    server.addHandler(alterarNumeros);
+    server.addHandler(alterarNumerosPlacar);
 
     AsyncCallbackJsonWebHandler *pausarCronometro =
     new AsyncCallbackJsonWebHandler("/pausarCronometro", [](AsyncWebServerRequest *request, String json) {

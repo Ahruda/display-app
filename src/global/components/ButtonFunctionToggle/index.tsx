@@ -36,15 +36,15 @@ export default function ButtonFunctionToggle(props: ToggleProps) {
       trackBar={{
         activeBackgroundColor: '#9fcafa',
         inActiveBackgroundColor: '#dadada',
-        borderActiveColor: '#2277da',
+        borderActiveColor: '#2d76ff',
         borderInActiveColor: '#9e9e9e',
         borderWidth: 3,
-        width: 120,
+        width: 100,
         height: 30,
         radius: 50,
       }}
       thumbButton={{
-        activeBackgroundColor: '#bfdbfb',
+        activeBackgroundColor: '#d4e8ff',
         inActiveBackgroundColor: '#c2c2c2',
 
       }}

@@ -23,7 +23,7 @@ export default function Placar() {
   const updateDisplay = () => {
   
     axios
-      .post(`http://${ip}/alterarNumeros`, {
+      .post(`http://${ip}/alterarNumerosPlacar`, {
         numero_1: timeB % 10,
         numero_2: timeB / 10,
         numero_3: 0,
@@ -60,6 +60,7 @@ export default function Placar() {
           <Button title="+2" onPress={() => setTimeA(timeA + 2)} />
           <Button title="+3" onPress={() => setTimeA(timeA + 3)} />
         </ContainerPlacar>
+        <Button title="Zerar placar" onPress={() => setTimeA(0)} />
       </ContainerTime>
       <ContainerTime>
         <Titulo>Time B</Titulo>
@@ -73,6 +74,8 @@ export default function Placar() {
           <Button title="+2" onPress={() => setTimeB(timeB + 2)} />
           <Button title="+3" onPress={() => setTimeB(timeB + 3)} />
         </ContainerPlacar>
+        <Button title="Zerar placar" onPress={() => setTimeB(0)} />
+
       </ContainerTime>
       <BotaoAtualizarDisplay
         onPressFunction={updateDisplay}

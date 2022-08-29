@@ -9,7 +9,6 @@ export const BtnGeral = styled.TouchableOpacity`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 16px;
 
 `
 

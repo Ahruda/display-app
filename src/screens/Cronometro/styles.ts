@@ -22,16 +22,34 @@ export const ModalInputs = styled.View`
   justify-content: space-between;
   align-items: center;
 `
-export const TextInputTime = styled.TextInput`
+export const TextInputTime = styled.Text`
+  font-size: 36px;
+  text-align: center;
   border-radius: 5;
   padding: 10px;
-  margin: 0 5px;
   border-color: rgba(0, 0, 0, 0.2);
   border-width: 1;
-  margin-bottom: 8;
+  //margin: 0px 5px ;
+  width: 40px;
   font-family: 'seven-segment';
-  font-size: 30;
+
 `
+
+export const ButtonInput = styled.TouchableOpacity`
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-width: 1;  
+  font-size: 30px;
+  width: 100%;
+  height: 30px;
+  padding: 0px;
+  border-radius: 2px;
+`
+
 export const ModalButtons = styled.View`
   display: flex;
   flex-direction: row;
@@ -42,4 +60,18 @@ export const ModalButtons = styled.View`
 
 export const TextDecimal = styled.Text`
   font-size: 26px;
+`
+
+export const TextoDigito = styled.Text`
+  font-size: 36px;
+  position: absolute;
+  font-family: 'seven-segment';
+`
+
+export const ContainerNumero = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 5px;
 `

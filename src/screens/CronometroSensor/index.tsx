@@ -21,23 +21,9 @@ export default function CronometroSensor() {
     });
   }
 
-  /*
-  useEffect(() => {
-    console.log("entrou no useefect")
-
-      axios.post(`http://192.168.200.184/interromperSensores`, {})
-      .then(function (response) {
-        if (response.status === 200) {
-
-          
-        }
-      })
-      
-  }, [estadoDisplay, funcao])
-*/
   const iniciarSensores = () => {
     if(funcao == 2 && estadoDisplay == 1){
-      axios.post(`http://192.168.200.184/iniciarSensores`, {}).then(function (response) {
+      axios.post(`http://${ip}/iniciarSensores`, {}).then(function (response) {
         if (response.status === 200) {
           setStatusSensores(0) // sensores não finalizaram
           setStatusRequisicao(1) // requisicao em andamento
@@ -50,12 +36,8 @@ export default function CronometroSensor() {
 
   const interromperSensores = () => {
     if(funcao == 2 && estadoDisplay == 1){
-      axios.post(`http://192.168.200.184/interromperSensores`, {})
+      axios.post(`http://${ip}/interromperSensores`, {})
       .then(function (response) {
-        if (response.status === 200) {
-
-          
-        }
       })
     }
   }
@@ -63,7 +45,7 @@ export default function CronometroSensor() {
   const verificarDadosSensores =  () => {
     if(funcao == 2 && estadoDisplay == 1){
       axios
-      .get(`http://192.168.200.184/dadosSensores`)
+      .get(`http://${ip}/dadosSensores`)
       .then(function (response) {
         if (response.status === 200) {
           setDadosSensor(response.data)
@@ -79,7 +61,7 @@ export default function CronometroSensor() {
   const verificarStatusSensores = () => {
     if(funcao == 2 && estadoDisplay == 1){
     axios
-      .get(`http://192.168.200.184/statusSensores`)
+      .get(`http://${ip}/statusSensores`)
       .then(async function (response) {
 
         console.log('entrou no timeout ' +estadoDisplay)
@@ -93,7 +75,7 @@ export default function CronometroSensor() {
         if(response.data["sensores_finalizados"] == 1) {
 
           axios
-          .get(`http://192.168.200.184/dadosSensores`)
+          .get(`http://${ip}/dadosSensores`)
           .then(function (response) {
             if (response.status === 200) {
               console.log("ultima rotina---------------")
@@ -122,12 +104,12 @@ export default function CronometroSensor() {
         alignItems: 'center',
       }}
     >
-      <Header>
+      <Header style={{marginBottom:20}}>
         <Titulo>Sensores</Titulo>
         <ButtonFunctionToggle funcao={2}></ButtonFunctionToggle>
       </Header>
 
-      <BotaoAtualizarDisplay
+      <BotaoAtualizarDisplay 
           onPressFunction = {
             statusSensores == 1 
               ? iniciarSensores 
