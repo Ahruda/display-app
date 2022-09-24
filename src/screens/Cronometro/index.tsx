@@ -26,6 +26,7 @@ export default function Cronometro() {
 
   const [isModalVisible, setModalVisible] = useState(false)
   const [estadoTimer, setEstadoTimer] = useState(false)
+  const [decrescente, setDecrescente] = useState(false)
 
   const [numero1, setNumero1] = useState(0)
   const [numero2, setNumero2] = useState(0)
@@ -47,6 +48,27 @@ export default function Cronometro() {
       .then(function (response) {
         if (response.status === 200) {
           estadoTimer ? setEstadoTimer(false) : setEstadoTimer(true)
+        }
+      })
+    }
+  }
+
+  const changeDecrescenteTimer = () => {
+    if(funcao == 1 && estadoDisplay == 1){
+
+      let json;
+
+      if (decrescente) {
+        json = {"decrescente": 0}
+      } else {
+        json = {"decrescente": 1}
+      }
+
+      axios
+      .post(`http://${ip}/modoCronometro`, json)
+      .then(function (response) {
+        if (response.status === 200) {
+          decrescente ? setDecrescente(false) : setDecrescente(true)
         }
       })
     }
@@ -110,7 +132,6 @@ export default function Cronometro() {
       <BtnGeral
         style={{ marginBottom: 20, marginTop: 50 }}
         onPress={changeStateTimer}
-        
       >
         <TextBtn>{estadoTimer ? 'Pausar' : 'Iniciar'}</TextBtn>
       </BtnGeral>
@@ -119,6 +140,12 @@ export default function Cronometro() {
       </BtnGeral>
       <BtnGeral style={{ marginBottom: 20 }} onPress={toggleModalVisibility}>
         <TextBtn>Definir tempo</TextBtn>
+      </BtnGeral>
+      <BtnGeral
+        style={{ marginBottom: 20, marginTop: 50 }}
+        onPress={changeDecrescenteTimer}
+      >
+        <TextBtn>Modo: {decrescente ? 'Decrescente' : 'Crescente'}</TextBtn>
       </BtnGeral>
 
       <Modal

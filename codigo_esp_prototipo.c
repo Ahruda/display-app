@@ -23,8 +23,8 @@ const char *ssid = "AP 22 2.4G";
 const char *password = "galbiere";
 */
 
-const char *ssid = "AP 22 2.4G";
-const char *password = "galbiere";
+const char *ssid = "GALBIERE";
+const char *password = "26106201";
 
 // Pinos do display de 7 segmentos
 const int pin_a = 33;
@@ -39,11 +39,11 @@ const int pin_g = 26;
 const int pin_displays[6] = {23, 22, 3, 21, 17, 16};
 
 // Variaveis de controle
-const int tempo_debounce = 1000;
+const int tempo_debounce = 500;
 const int pin_entrada_sensor_inicial = 34;
 const int pin_entrada_sensor_intermediario = 35;
 const int pin_entrada_sensor_final = 27;
-const int pin_led_estado_sensor = 13;
+const int pin_buzzer = 13;
 
 int tempo_delay = 500;
 int estado_display = 0; // Ligado ou desligado
@@ -51,8 +51,11 @@ int funcao = 0;
 int estado_multiplexacao = 0;
 int pausar_cronometro = 1;
 int tempo_inicial = 0;
+int contador_decrescente = 0;
+int acionar_buzzer = 0;
+int acionar_buzzer_cronometro = 0;
+int buzzer_cronometro = 0;
 
-int contador_acionamentos = 0;
 int sensores_finalizados = 0;
 
 unsigned int segundos = 0;
@@ -64,26 +67,11 @@ char ent[8];
 
 int vetorNumeros[6] = {1, 2, 3, 4, 5, 6};
 
-//DynamicJsonDocument valores_sensor(1024);
-
 const size_t CAPACITY = JSON_ARRAY_SIZE(20);
 StaticJsonDocument<CAPACITY> doc;
 JsonArray arraySensor = doc.to<JsonArray>();
 
 AsyncWebServer server(80);
-
-class Sensor{
-   
-  public:
-   
-    String nome;
-    int valor;
-     
-    Sensor (String t_nome, int t_valor){
-      nome = t_nome;
-      valor = t_valor;
-    }
-};
 
 void escreverNumero(int numero) {
 
@@ -266,7 +254,16 @@ void standbyDisplay() {
 
 void incrementarSegundos() {
     if(!pausar_cronometro){
-        segundos++;
+        if (contador_decrescente == 1) {
+            if(segundos != 0) {
+                segundos--;
+            } else if (buzzer_cronometro == 0){
+                acionar_buzzer_cronometro = 1;
+            }
+        } else {
+            segundos++;
+        }
+        
     }
 }
 
@@ -280,7 +277,7 @@ void funcao_cronometro() {
     timerAlarmEnable(timer);
 
     while(funcao == 1 && estado_display != 0) {
-       
+
         escreverTempoEmSegundos(segundos);
 
         for (int i = 0; i < 6; i++) {
@@ -291,14 +288,14 @@ void funcao_cronometro() {
             digitalWrite(pin_displays[i], HIGH);
 
         }
+
+        if(segundos == 0 && acionar_buzzer_cronometro == 1 && buzzer_cronometro == 0 && contador_decrescente == 1){
+            buzzerCronometro();
+        }
         
     }
     
     timerEnd(timer);
-}
-
-void funcao_sensor() {
-
 }
 
 void funcao_placar() {
@@ -331,8 +328,6 @@ void IRAM_ATTR sensorInicialContador() {
 
         tempo_inicial = millis();
         timestamp_ultimo_acionamento = millis();
-        contador_acionamentos = 0;
-        digitalWrite(pin_led_estado_sensor, HIGH);
 
     }
 
@@ -345,11 +340,9 @@ void IRAM_ATTR sensorIntermediarioContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
 
             timestamp_ultimo_acionamento = millis();
-            sprintf(ent, "%d", contador_acionamentos); 
             //valores_sensor[ent] = timestamp_ultimo_acionamento - tempo_inicial;
             arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
-            contador_acionamentos++;
-            
+
         }
     }
 
@@ -359,23 +352,70 @@ void IRAM_ATTR sensorFinalContador() {
 
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
-        Serial.println("sensor final");
-
         timestamp_ultimo_acionamento = millis();
-        //sprintf(ent, "%s%d", "sensor_", contador_acionamentos); 
-        //sprintf(ent, "%d", contador_acionamentos); 
+
         //valores_sensor["final"] = timestamp_ultimo_acionamento - tempo_inicial;
         arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
-        contador_acionamentos++;
-
-        digitalWrite(pin_led_estado_sensor, LOW);
 
         sensores_finalizados = 1;
+        acionar_buzzer = 1;
     }
 }
 
-void setup()
-{
+void buzzer() {
+
+    int tempo = 0;
+    acionar_buzzer = 0;
+
+    for(int i = 0; i < 3; i++) {
+           
+        tempo = millis() + 1000;
+
+        digitalWrite(pin_buzzer, HIGH);
+
+        while(tempo > millis()) {
+            multiplexarDisplay();
+        }
+
+        digitalWrite(pin_buzzer, LOW);
+
+        apagarDisplay();
+        tempo = millis() + 1000;
+
+        while(tempo > millis()) { }
+
+    }
+
+}
+
+void buzzerCronometro() {
+
+    int tempo = 0;
+    buzzer_cronometro = 1;
+    acionar_buzzer_cronometro = 0;
+
+    for(int i = 0; i < 3; i++) {
+        
+        tempo = millis() + 1000;
+
+        digitalWrite(pin_buzzer, HIGH);
+
+        while(tempo > millis()) {
+            multiplexarDisplay();
+        }
+
+        digitalWrite(pin_buzzer, LOW);
+
+        apagarDisplay();
+        tempo = millis() + 1000;
+
+        while(tempo > millis()) { }
+
+    }
+
+}
+
+void setup() {
 
     Serial.begin(9600);
    
@@ -396,7 +436,7 @@ void setup()
     pinMode(pin_entrada_sensor_intermediario, INPUT);
     pinMode(pin_entrada_sensor_final, INPUT);
 
-    pinMode(pin_led_estado_sensor, OUTPUT);
+    pinMode(pin_buzzer, OUTPUT);
 
     attachInterrupt(pin_entrada_sensor_inicial, sensorInicialContador, RISING);
     attachInterrupt(pin_entrada_sensor_intermediario, sensorIntermediarioContador, RISING);
@@ -418,8 +458,8 @@ void setup()
         IPAddress gateway(192, 168, 100, 1);
     */
 
-    IPAddress local_IP(192, 168, 100, 184);
-    IPAddress gateway(192, 168, 100, 1);
+    IPAddress local_IP(192, 168, 200, 184);
+    IPAddress gateway(192, 168, 200, 1);
 
     IPAddress subnet(255, 255, 0, 0);
 
@@ -454,6 +494,7 @@ void setup()
         tempo_inicial = 0;
         arraySensor.clear();
         sensores_finalizados = 1;
+        buzzer_cronometro = 0;
         
         request->send(200, "text/plain"); 
 
@@ -467,6 +508,7 @@ void setup()
         deserializeJson(data, json);
 
         segundos = data["segundos"];
+        buzzer_cronometro = 0;
 
         request->send(200, "text/plain"); 
 
@@ -509,19 +551,45 @@ void setup()
     new AsyncCallbackJsonWebHandler("/reiniciarCronometro", [](AsyncWebServerRequest *request, String json) {
 
         segundos = 0;
+        buzzer_cronometro = 0;
 
         request->send(200, "text/plain"); 
 
     });
     server.addHandler(reiniciarCronometro);
 
+    AsyncCallbackJsonWebHandler *modoCronometro =
+    new AsyncCallbackJsonWebHandler("/modoCronometro", [](AsyncWebServerRequest *request, String json) {
+
+        DynamicJsonDocument data(1024);
+        deserializeJson(data, json);
+
+        // Seta os numeros no display
+        contador_decrescente = data["decrescente"];
+        buzzer_cronometro = 0;
+
+        request->send(200, "text/plain"); 
+
+    });
+    server.addHandler(modoCronometro);
+
+/*
+    AsyncCallbackJsonWebHandler *contadorDecrescente =
+    new AsyncCallbackJsonWebHandler("/modoCronometro", [](AsyncWebServerRequest *request, String json) {
+
+        segundos = 0;
+
+        request->send(200, "text/plain"); 
+
+    });
+    server.addHandler(contadorDecrescente);
+*/
+
     AsyncCallbackJsonWebHandler *changeDelay =
     new AsyncCallbackJsonWebHandler("/delay", [](AsyncWebServerRequest *request, String json) {                             
         
         DynamicJsonDocument data(1024);
         deserializeJson(data, json);
-
-        Serial.println(json);
 
         // Seta os numeros no display
         tempo_delay = data["delay"];
@@ -573,8 +641,11 @@ void setup()
 
 }
 
-void loop()
-{
+void loop() {
+
+    if(acionar_buzzer) {
+        buzzer();
+    }
 
     if(estado_display == 0){
         standbyDisplay();

@@ -8,6 +8,7 @@ import Display from '../../global/components/Display'
 import { Header, Titulo } from '../../global/styles'
 import { Linha, Scroll, Status, TabelaDados } from './styles'
 
+
 export default function CronometroSensor() {
   const { funcao, estadoDisplay,ip } = useContext(ConfigContext)
   const [dadosSensor, setDadosSensor] = useState<number[]>([])

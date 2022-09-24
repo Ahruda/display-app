@@ -36,18 +36,19 @@ export const TextInputTime = styled.Text`
 `
 
 export const ButtonInput = styled.TouchableOpacity`
+  background-color: #2c8af2;
   margin: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
-  border-width: 1;  
+  //border-width: 1;  
   font-size: 30px;
   width: 100%;
   height: 30px;
   padding: 0px;
-  border-radius: 2px;
+  border-radius: 5px;
 `
 
 export const ModalButtons = styled.View`
@@ -63,6 +64,7 @@ export const TextDecimal = styled.Text`
 `
 
 export const TextoDigito = styled.Text`
+  color: white;
   font-size: 36px;
   position: absolute;
   font-family: 'seven-segment';
