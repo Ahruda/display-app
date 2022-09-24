@@ -102,8 +102,6 @@ export default function Cronometro() {
     minutos = minutos + horas * 60
     segundos = segundos + minutos * 60
 
-    console.log(segundos)
-
     if(funcao == 1 && estadoDisplay == 1){
       toggleModalVisibility
       axios
@@ -119,6 +117,11 @@ export default function Cronometro() {
       })
     }
   }
+
+  useEffect(() => {
+    setEstadoTimer(false);
+    setDecrescente(false);
+  }, [funcao, estadoDisplay])
 
 
   return(

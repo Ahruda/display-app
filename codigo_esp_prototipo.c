@@ -495,6 +495,8 @@ void setup() {
         arraySensor.clear();
         sensores_finalizados = 1;
         buzzer_cronometro = 0;
+        pausar_cronometro = 1;
+        contador_decrescente = 0;
         
         request->send(200, "text/plain"); 
 
