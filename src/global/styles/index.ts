@@ -11,7 +11,6 @@ export const BtnGeral = styled.TouchableOpacity`
   justify-content: center;
 
 `
-
 export const TextBtn = styled.Text`
   display: flex;
   flex-direction: column;
@@ -30,7 +29,18 @@ export const Header = styled.View`
   padding: 10px 0;
   border: 1px;
 `
-
 export const Titulo = styled.Text`
   font-size: 20px;
+`
+export const TituloApp = styled.Text`
+font-family: 'seven-segment';
+  font-size: 45px;
+  text-align: center;
+  padding: 15px 0px 0px 0px;
+`
+export const SubTituloApp = styled.Text`
+  font-family: 'seven-segment';
+  font-size: 10px;
+  text-align: center;
+  padding: 0px 0px 10px 0;
 `

@@ -19,11 +19,11 @@ export const NomeTime = styled.Text`
   font-size: 13px;
 `
 export const PlacarTime = styled.Text`
-  width: 40px;
+  width: 60px;
   text-align: center;
   font-family: 'seven-segment';
   border: 1px;
-  padding: 0 5px 0 7px;
+  padding: 0px;
   font-size: 46px;
   display: flex;
   flex-direction: column;

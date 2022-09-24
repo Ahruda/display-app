@@ -55,6 +55,7 @@ int contador_decrescente = 0;
 int acionar_buzzer = 0;
 int acionar_buzzer_cronometro = 0;
 int buzzer_cronometro = 0;
+int numeroInicial = 0;
 
 int sensores_finalizados = 0;
 
@@ -535,6 +536,22 @@ void setup() {
     });
     server.addHandler(alterarNumerosPlacar);
 
+    AsyncCallbackJsonWebHandler *testarNumero =
+    new AsyncCallbackJsonWebHandler("/testarNumero", [](AsyncWebServerRequest *request, String json) {
+                              
+        DynamicJsonDocument data(1024);
+        deserializeJson(data, json);
+
+        numeroInicial = data["numero"];
+        funcao = 4;
+        estado_display = 1;
+    
+        request->send(200, "text/plain"); 
+
+    });
+    server.addHandler(testarNumero);
+
+
     AsyncCallbackJsonWebHandler *pausarCronometro =
     new AsyncCallbackJsonWebHandler("/pausarCronometro", [](AsyncWebServerRequest *request, String json) {
 
@@ -653,7 +670,7 @@ void loop() {
         standbyDisplay();
     } else{
         for (int i = 0; i < 6; i++) {
-            vetorNumeros[i] = 0;
+            vetorNumeros[i] = numeroInicial;
         }
         segundos = 0;
         switch (funcao) {
@@ -671,6 +688,9 @@ void loop() {
                 break;
             case 3:
                 funcao_placar();
+                break;
+            case 4:
+                multiplexarDisplay();
                 break;
             default:
                 standbyDisplay();

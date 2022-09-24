@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Configuracao from './src/screens/Configuracao'
 import { ConfigContext, ConfigProvider } from './src/contexts/config'
 import { useState } from 'react'
+import { TituloApp, SubTituloApp } from './src/global/styles'
 
 export default function App() {
   const Tab = createBottomTabNavigator()
@@ -29,7 +30,9 @@ export default function App() {
     <>
       <ConfigProvider>
         <SafeAreaView>
-          <Display></Display>
+          <TituloApp>Display App</TituloApp>
+          <SubTituloApp></SubTituloApp>
+          {/*<Display></Display>*/}
         </SafeAreaView>
         <NavigationContainer style={{position: 'absolute'}}>
           <Tab.Navigator
