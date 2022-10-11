@@ -23,8 +23,8 @@ const char *ssid = "AP 22 2.4G";
 const char *password = "galbiere";
 */
 
-const char *ssid = "GALBIERE";
-const char *password = "26106201";
+const char *ssid = "AP 22 2.4G";
+const char *password = "galbiere";
 
 // Pinos do display de 7 segmentos
 const int pin_a = 33;
@@ -459,9 +459,8 @@ void setup() {
         IPAddress gateway(192, 168, 100, 1);
     */
 
-    IPAddress local_IP(192, 168, 200, 184);
-    IPAddress gateway(192, 168, 200, 1);
-
+    IPAddress local_IP(192, 168, 100, 184);
+    IPAddress gateway(192, 168, 100, 1);
     IPAddress subnet(255, 255, 0, 0);
 
     if (!WiFi.config(local_IP, gateway, subnet))

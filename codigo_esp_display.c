@@ -1,4 +1,4 @@
-// Como convenção os 6 displays são numerados de 0 a 5
+// Por convenção os 6 displays são numerados de 0 a 5
 // do menos significativo (0) para o mais significativo (5)
 
 #include <WiFi.h>
@@ -23,37 +23,40 @@ const char *ssid = "AP 22 2.4G";
 const char *password = "galbiere";
 */
 
-const char *ssid = "IFPCS_Container";
-const char *password = "containerIfPocos2018";
+const char *ssid = "AP 22 2.4G";
+const char *password = "galbiere";
 
 // Pinos do display de 7 segmentos
-const int pin_a = 33;
-const int pin_b = 32;
+const int pin_a = 15;
+const int pin_b = 2;
 const int pin_c = 4;
-const int pin_d = 2;
-const int pin_e = 15;
-const int pin_f = 25;
-const int pin_g = 26;
+const int pin_d = 16;
+const int pin_e = 17;
+const int pin_f = 5;
+const int pin_g = 18;
 
 // Pinos de ativação dos displays
-const int pin_displays[6] = {23, 22, 3, 21, 17, 16};
+const int pin_displays[6] = {14, 27, 26, 25, 33, 32};
 
 // Variaveis de controle
 const int tempo_debounce = 500;
-const int pin_entrada_sensor_inicial = 34;
-const int pin_entrada_sensor_intermediario = 35;
-const int pin_entrada_sensor_final = 27;
-const int pin_led_estado_sensor = 13;
+const int pin_entrada_sensor_inicial = 36;
+const int pin_entrada_sensor_intermediario = 39;
+const int pin_entrada_sensor_final = 34;
+const int pin_buzzer = 13;
 
-int tempo_delay = 500;
+int tempo_delay = 3000;
 int estado_display = 0; // Ligado ou desligado
 int funcao = 0;
 int estado_multiplexacao = 0;
 int pausar_cronometro = 1;
 int tempo_inicial = 0;
 int contador_decrescente = 0;
+int acionar_buzzer = 0;
+int acionar_buzzer_cronometro = 0;
+int buzzer_cronometro = 0;
+int numeroInicial = 0;
 
-int contador_acionamentos = 0;
 int sensores_finalizados = 0;
 
 unsigned int segundos = 0;
@@ -76,95 +79,95 @@ void escreverNumero(int numero) {
     switch (numero) {
 
         case 0:
+            digitalWrite(pin_a, HIGH);
+            digitalWrite(pin_b, HIGH);
+            digitalWrite(pin_c, HIGH);
+            digitalWrite(pin_d, HIGH);
+            digitalWrite(pin_e, HIGH);
+            digitalWrite(pin_f, HIGH);
+            digitalWrite(pin_g, LOW);
+            break;
+
+        case 1:
             digitalWrite(pin_a, LOW);
-            digitalWrite(pin_b, LOW);
-            digitalWrite(pin_c, LOW);
+            digitalWrite(pin_b, HIGH);
+            digitalWrite(pin_c, HIGH);
             digitalWrite(pin_d, LOW);
+            digitalWrite(pin_e, LOW);
+            digitalWrite(pin_f, LOW);
+            digitalWrite(pin_g, LOW);
+            break;
+        case 2:
+            digitalWrite(pin_a, HIGH);
+            digitalWrite(pin_b, HIGH);
+            digitalWrite(pin_c, LOW);
+            digitalWrite(pin_d, HIGH);
+            digitalWrite(pin_e, HIGH);
+            digitalWrite(pin_f, LOW);
+            digitalWrite(pin_g, HIGH);
+            break;
+        case 3:
+            digitalWrite(pin_a, HIGH);
+            digitalWrite(pin_b, HIGH);
+            digitalWrite(pin_c, HIGH);
+            digitalWrite(pin_d, HIGH);
             digitalWrite(pin_e, LOW);
             digitalWrite(pin_f, LOW);
             digitalWrite(pin_g, HIGH);
             break;
-
-        case 1:
-            digitalWrite(pin_a, HIGH);
-            digitalWrite(pin_b, LOW);
-            digitalWrite(pin_c, LOW);
-            digitalWrite(pin_d, HIGH);
-            digitalWrite(pin_e, HIGH);
-            digitalWrite(pin_f, HIGH);
-            digitalWrite(pin_g, HIGH);
-            break;
-        case 2:
+        case 4:
             digitalWrite(pin_a, LOW);
-            digitalWrite(pin_b, LOW);
+            digitalWrite(pin_b, HIGH);
             digitalWrite(pin_c, HIGH);
             digitalWrite(pin_d, LOW);
             digitalWrite(pin_e, LOW);
             digitalWrite(pin_f, HIGH);
-            digitalWrite(pin_g, LOW);
-            break;
-        case 3:
-            digitalWrite(pin_a, LOW);
-            digitalWrite(pin_b, LOW);
-            digitalWrite(pin_c, LOW);
-            digitalWrite(pin_d, LOW);
-            digitalWrite(pin_e, HIGH);
-            digitalWrite(pin_f, HIGH);
-            digitalWrite(pin_g, LOW);
-            break;
-        case 4:
-            digitalWrite(pin_a, HIGH);
-            digitalWrite(pin_b, LOW);
-            digitalWrite(pin_c, LOW);
-            digitalWrite(pin_d, HIGH);
-            digitalWrite(pin_e, HIGH);
-            digitalWrite(pin_f, LOW);
-            digitalWrite(pin_g, LOW);
+            digitalWrite(pin_g, HIGH);
             break;
         case 5:
-            digitalWrite(pin_a, LOW);
-            digitalWrite(pin_b, HIGH);
-            digitalWrite(pin_c, LOW);
-            digitalWrite(pin_d, LOW);
-            digitalWrite(pin_e, HIGH);
-            digitalWrite(pin_f, LOW);
-            digitalWrite(pin_g, LOW);
+            digitalWrite(pin_a, HIGH);
+            digitalWrite(pin_b, LOW);
+            digitalWrite(pin_c, HIGH);
+            digitalWrite(pin_d, HIGH);
+            digitalWrite(pin_e, LOW);
+            digitalWrite(pin_f, HIGH);
+            digitalWrite(pin_g, HIGH);
             break;
         case 6:
-            digitalWrite(pin_a, LOW);
-            digitalWrite(pin_b, HIGH);
-            digitalWrite(pin_c, LOW);
-            digitalWrite(pin_d, LOW);
-            digitalWrite(pin_e, LOW);
-            digitalWrite(pin_f, LOW);
-            digitalWrite(pin_g, LOW);
-            break;
-        case 7:
-            digitalWrite(pin_a, LOW);
+            digitalWrite(pin_a, HIGH);
             digitalWrite(pin_b, LOW);
-            digitalWrite(pin_c, LOW);
+            digitalWrite(pin_c, HIGH);
             digitalWrite(pin_d, HIGH);
             digitalWrite(pin_e, HIGH);
             digitalWrite(pin_f, HIGH);
             digitalWrite(pin_g, HIGH);
             break;
-        case 8:
-            digitalWrite(pin_a, LOW);
-            digitalWrite(pin_b, LOW);
-            digitalWrite(pin_c, LOW);
+        case 7:
+            digitalWrite(pin_a, HIGH);
+            digitalWrite(pin_b, HIGH);
+            digitalWrite(pin_c, HIGH);
             digitalWrite(pin_d, LOW);
             digitalWrite(pin_e, LOW);
             digitalWrite(pin_f, LOW);
             digitalWrite(pin_g, LOW);
             break;
-        case 9:
-            digitalWrite(pin_a, LOW);
-            digitalWrite(pin_b, LOW);
-            digitalWrite(pin_c, LOW);
-            digitalWrite(pin_d, LOW);
+        case 8:
+            digitalWrite(pin_a, HIGH);
+            digitalWrite(pin_b, HIGH);
+            digitalWrite(pin_c, HIGH);
+            digitalWrite(pin_d, HIGH);
             digitalWrite(pin_e, HIGH);
-            digitalWrite(pin_f, LOW);
-            digitalWrite(pin_g, LOW);
+            digitalWrite(pin_f, HIGH);
+            digitalWrite(pin_g, HIGH);
+            break;
+        case 9:
+            digitalWrite(pin_a, HIGH);
+            digitalWrite(pin_b, HIGH);
+            digitalWrite(pin_c, HIGH);
+            digitalWrite(pin_d, HIGH);
+            digitalWrite(pin_e, LOW);
+            digitalWrite(pin_f, HIGH);
+            digitalWrite(pin_g, HIGH);
             break;
 
         default:
@@ -175,7 +178,7 @@ void escreverNumero(int numero) {
 void apagarDisplay() {
     
     for (int i = 0; i < 6; i++) {
-        digitalWrite(pin_displays[i], HIGH);
+        digitalWrite(pin_displays[i], LOW);
     }
 }
 
@@ -217,10 +220,10 @@ void multiplexarDisplay() {
     apagarDisplay();
  
     for (int i = 0; i < 6; i++) {
-        digitalWrite(pin_displays[i], LOW);
+        digitalWrite(pin_displays[i], HIGH);
         escreverNumero(vetorNumeros[i]);
         delayMicroseconds(tempo_delay);
-        digitalWrite(pin_displays[i], HIGH);
+        digitalWrite(pin_displays[i], LOW);
     }
 
 }
@@ -252,11 +255,11 @@ void standbyDisplay() {
 
 void incrementarSegundos() {
     if(!pausar_cronometro){
-        if (contador_decrescente) {
+        if (contador_decrescente == 1) {
             if(segundos != 0) {
                 segundos--;
-            } else {
-                // Buzzer para avisar o encerramento
+            } else if (buzzer_cronometro == 0){
+                acionar_buzzer_cronometro = 1;
             }
         } else {
             segundos++;
@@ -275,16 +278,20 @@ void funcao_cronometro() {
     timerAlarmEnable(timer);
 
     while(funcao == 1 && estado_display != 0) {
-       
+
         escreverTempoEmSegundos(segundos);
 
         for (int i = 0; i < 6; i++) {
 
-            digitalWrite(pin_displays[i], LOW);
+            digitalWrite(pin_displays[i], HIGH);
             escreverNumero(vetorNumeros[i]);
             delayMicroseconds(tempo_delay);
-            digitalWrite(pin_displays[i], HIGH);
+            digitalWrite(pin_displays[i], LOW);
 
+        }
+
+        if(segundos == 0 && acionar_buzzer_cronometro == 1 && buzzer_cronometro == 0 && contador_decrescente == 1){
+            buzzerCronometro();
         }
         
     }
@@ -292,14 +299,10 @@ void funcao_cronometro() {
     timerEnd(timer);
 }
 
-void funcao_sensor() {
-
-}
-
 void funcao_placar() {
 
-    digitalWrite(pin_displays[2], HIGH);
-    digitalWrite(pin_displays[3], HIGH);
+    digitalWrite(pin_displays[2], LOW);
+    digitalWrite(pin_displays[3], LOW);
 
     while(funcao == 3 && estado_display != 0) {
 
@@ -309,10 +312,10 @@ void funcao_placar() {
                 i = 4;
             }
 
-            digitalWrite(pin_displays[i], LOW);
+            digitalWrite(pin_displays[i], HIGH);
             escreverNumero(vetorNumeros[i]);
             delayMicroseconds(tempo_delay);
-            digitalWrite(pin_displays[i], HIGH);
+            digitalWrite(pin_displays[i], LOW);
 
         }
         
@@ -326,8 +329,6 @@ void IRAM_ATTR sensorInicialContador() {
 
         tempo_inicial = millis();
         timestamp_ultimo_acionamento = millis();
-        contador_acionamentos = 0;
-        digitalWrite(pin_led_estado_sensor, HIGH);
 
     }
 
@@ -340,11 +341,9 @@ void IRAM_ATTR sensorIntermediarioContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
 
             timestamp_ultimo_acionamento = millis();
-            sprintf(ent, "%d", contador_acionamentos); 
             //valores_sensor[ent] = timestamp_ultimo_acionamento - tempo_inicial;
             arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
-            contador_acionamentos++;
-            
+
         }
     }
 
@@ -354,23 +353,70 @@ void IRAM_ATTR sensorFinalContador() {
 
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
-        Serial.println("sensor final");
-
         timestamp_ultimo_acionamento = millis();
-        //sprintf(ent, "%s%d", "sensor_", contador_acionamentos); 
-        //sprintf(ent, "%d", contador_acionamentos); 
+
         //valores_sensor["final"] = timestamp_ultimo_acionamento - tempo_inicial;
         arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
-        contador_acionamentos++;
-
-        digitalWrite(pin_led_estado_sensor, LOW);
 
         sensores_finalizados = 1;
+        acionar_buzzer = 1;
     }
 }
 
-void setup()
-{
+void buzzer() {
+
+    int tempo = 0;
+    acionar_buzzer = 0;
+
+    for(int i = 0; i < 3; i++) {
+           
+        tempo = millis() + 1000;
+
+        digitalWrite(pin_buzzer, LOW);
+
+        while(tempo > millis()) {
+            multiplexarDisplay();
+        }
+
+        digitalWrite(pin_buzzer, HIGH);
+
+        apagarDisplay();
+        tempo = millis() + 1000;
+
+        while(tempo > millis()) { }
+
+    }
+
+}
+
+void buzzerCronometro() {
+
+    int tempo = 0;
+    buzzer_cronometro = 1;
+    acionar_buzzer_cronometro = 0;
+
+    for(int i = 0; i < 3; i++) {
+        
+        tempo = millis() + 1000;
+
+        digitalWrite(pin_buzzer, LOW);
+
+        while(tempo > millis()) {
+            multiplexarDisplay();
+        }
+
+        digitalWrite(pin_buzzer, HIGH);
+
+        apagarDisplay();
+        tempo = millis() + 1000;
+
+        while(tempo > millis()) { }
+
+    }
+
+}
+
+void setup() {
 
     Serial.begin(9600);
    
@@ -391,7 +437,7 @@ void setup()
     pinMode(pin_entrada_sensor_intermediario, INPUT);
     pinMode(pin_entrada_sensor_final, INPUT);
 
-    pinMode(pin_led_estado_sensor, OUTPUT);
+    pinMode(pin_buzzer, OUTPUT);
 
     attachInterrupt(pin_entrada_sensor_inicial, sensorInicialContador, RISING);
     attachInterrupt(pin_entrada_sensor_intermediario, sensorIntermediarioContador, RISING);
@@ -412,9 +458,9 @@ void setup()
         IPAddress local_IP(192, 168, 100, 184);
         IPAddress gateway(192, 168, 100, 1);
     */
-        IPAddress local_IP(10, 14, 160, 184);
-        IPAddress gateway(10, 14, 161, 250);
 
+    IPAddress local_IP(192, 168, 100, 184);
+    IPAddress gateway(192, 168, 100, 1);
     IPAddress subnet(255, 255, 0, 0);
 
     if (!WiFi.config(local_IP, gateway, subnet))
@@ -448,6 +494,9 @@ void setup()
         tempo_inicial = 0;
         arraySensor.clear();
         sensores_finalizados = 1;
+        buzzer_cronometro = 0;
+        pausar_cronometro = 1;
+        contador_decrescente = 0;
         
         request->send(200, "text/plain"); 
 
@@ -461,6 +510,7 @@ void setup()
         deserializeJson(data, json);
 
         segundos = data["segundos"];
+        buzzer_cronometro = 0;
 
         request->send(200, "text/plain"); 
 
@@ -485,6 +535,22 @@ void setup()
     });
     server.addHandler(alterarNumerosPlacar);
 
+    AsyncCallbackJsonWebHandler *testarNumero =
+    new AsyncCallbackJsonWebHandler("/testarNumero", [](AsyncWebServerRequest *request, String json) {
+                              
+        DynamicJsonDocument data(1024);
+        deserializeJson(data, json);
+
+        numeroInicial = data["numero"];
+        funcao = 4;
+        estado_display = 1;
+    
+        request->send(200, "text/plain"); 
+
+    });
+    server.addHandler(testarNumero);
+
+
     AsyncCallbackJsonWebHandler *pausarCronometro =
     new AsyncCallbackJsonWebHandler("/pausarCronometro", [](AsyncWebServerRequest *request, String json) {
 
@@ -499,6 +565,17 @@ void setup()
     });
     server.addHandler(pausarCronometro);
 
+    AsyncCallbackJsonWebHandler *reiniciarCronometro =
+    new AsyncCallbackJsonWebHandler("/reiniciarCronometro", [](AsyncWebServerRequest *request, String json) {
+
+        segundos = 0;
+        buzzer_cronometro = 0;
+
+        request->send(200, "text/plain"); 
+
+    });
+    server.addHandler(reiniciarCronometro);
+
     AsyncCallbackJsonWebHandler *modoCronometro =
     new AsyncCallbackJsonWebHandler("/modoCronometro", [](AsyncWebServerRequest *request, String json) {
 
@@ -507,13 +584,14 @@ void setup()
 
         // Seta os numeros no display
         contador_decrescente = data["decrescente"];
-
+        buzzer_cronometro = 0;
 
         request->send(200, "text/plain"); 
 
     });
     server.addHandler(modoCronometro);
 
+/*
     AsyncCallbackJsonWebHandler *contadorDecrescente =
     new AsyncCallbackJsonWebHandler("/modoCronometro", [](AsyncWebServerRequest *request, String json) {
 
@@ -523,6 +601,7 @@ void setup()
 
     });
     server.addHandler(contadorDecrescente);
+*/
 
     AsyncCallbackJsonWebHandler *changeDelay =
     new AsyncCallbackJsonWebHandler("/delay", [](AsyncWebServerRequest *request, String json) {                             
@@ -544,19 +623,6 @@ void setup()
         arraySensor.clear();
         sensores_finalizados = 0;
         
-        request->send(200, "text/plain"); 
-    });
-    server.addHandler(iniciarSensores);
-
-    AsyncCallbackJsonWebHandler *iniciarSensores =
-    new AsyncCallbackJsonWebHandler("/numeroTotal", [](AsyncWebServerRequest *request, String json) {                             
-
-        DynamicJsonDocument data(1024);
-        deserializeJson(data, json);
-
-        // Seta os numeros no display
-        separarNumeroComposto(data["numero"])
-
         request->send(200, "text/plain"); 
     });
     server.addHandler(iniciarSensores);
@@ -593,14 +659,17 @@ void setup()
 
 }
 
-void loop()
-{
+void loop() {
+
+    if(acionar_buzzer) {
+        buzzer();
+    }
 
     if(estado_display == 0){
         standbyDisplay();
     } else{
         for (int i = 0; i < 6; i++) {
-            vetorNumeros[i] = 0;
+            vetorNumeros[i] = numeroInicial;
         }
         segundos = 0;
         switch (funcao) {
@@ -618,6 +687,9 @@ void loop()
                 break;
             case 3:
                 funcao_placar();
+                break;
+            case 4:
+                multiplexarDisplay();
                 break;
             default:
                 standbyDisplay();
