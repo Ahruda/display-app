@@ -21,6 +21,10 @@ const char *password = "26106201";
 
 const char *ssid = "AP 22 2.4G";
 const char *password = "galbiere";
+
+const char *ssid = "leonardo";
+const char *password = "leonardo123";
+
 */
 
 const char *ssid = "AP 22 2.4G";
@@ -43,7 +47,7 @@ const int tempo_debounce = 500;
 const int pin_entrada_sensor_inicial = 36;
 const int pin_entrada_sensor_intermediario = 39;
 const int pin_entrada_sensor_final = 34;
-const int pin_buzzer = 13;
+const int pin_buzzer = 19;
 
 int tempo_delay = 3000;
 int estado_display = 0; // Ligado ou desligado
@@ -370,18 +374,18 @@ void buzzer() {
 
     for(int i = 0; i < 3; i++) {
            
-        tempo = millis() + 1000;
+        tempo = millis() + 500;
 
-        digitalWrite(pin_buzzer, LOW);
+        digitalWrite(pin_buzzer, HIGH);
 
         while(tempo > millis()) {
             multiplexarDisplay();
         }
 
-        digitalWrite(pin_buzzer, HIGH);
+        digitalWrite(pin_buzzer, LOW);
 
         apagarDisplay();
-        tempo = millis() + 1000;
+        tempo = millis() + 500;
 
         while(tempo > millis()) { }
 
@@ -397,18 +401,18 @@ void buzzerCronometro() {
 
     for(int i = 0; i < 3; i++) {
         
-        tempo = millis() + 1000;
+        tempo = millis() + 500;
 
-        digitalWrite(pin_buzzer, LOW);
+        digitalWrite(pin_buzzer, HIGH);
 
         while(tempo > millis()) {
             multiplexarDisplay();
         }
 
-        digitalWrite(pin_buzzer, HIGH);
+        digitalWrite(pin_buzzer, LOW);
 
         apagarDisplay();
-        tempo = millis() + 1000;
+        tempo = millis() + 500;
 
         while(tempo > millis()) { }
 
@@ -457,6 +461,9 @@ void setup() {
 
         IPAddress local_IP(192, 168, 100, 184);
         IPAddress gateway(192, 168, 100, 1);
+
+        IPAddress local_IP(192, 168, 127, 184);
+        IPAddress gateway(192, 168, 127, 145);
     */
 
     IPAddress local_IP(192, 168, 100, 184);
