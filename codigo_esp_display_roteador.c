@@ -60,6 +60,7 @@ int acionar_buzzer = 0;
 int acionar_buzzer_cronometro = 0;
 int buzzer_cronometro = 0;
 int numeroInicial = 0;
+int buzzer_simples = 0;
 
 int sensores_finalizados = 0;
 
@@ -330,10 +331,11 @@ void funcao_placar() {
 void IRAM_ATTR sensorInicialContador() {
 
     if(funcao == 2 && estado_display != 0 && tempo_inicial == 0) {
-
+Serial.print("inicial");
         tempo_inicial = millis();
         timestamp_ultimo_acionamento = millis();
-
+        buzzer_simples = 1;
+        acionar_buzzer = 1;
     }
 
 }
@@ -343,10 +345,10 @@ void IRAM_ATTR sensorIntermediarioContador() {
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
-
+Serial.print("inter ");
             timestamp_ultimo_acionamento = millis();
             //valores_sensor[ent] = timestamp_ultimo_acionamento - tempo_inicial;
-            arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
+            arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial)/10);
 
         }
     }
@@ -358,9 +360,9 @@ void IRAM_ATTR sensorFinalContador() {
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         timestamp_ultimo_acionamento = millis();
-
+Serial.print("final ");
         //valores_sensor["final"] = timestamp_ultimo_acionamento - tempo_inicial;
-        arraySensor.add(timestamp_ultimo_acionamento - tempo_inicial);
+        arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial)/10);
 
         sensores_finalizados = 1;
         acionar_buzzer = 1;
@@ -371,9 +373,9 @@ void buzzer() {
 
     int tempo = 0;
     acionar_buzzer = 0;
-
-    for(int i = 0; i < 3; i++) {
-           
+    
+    if(buzzer_simples == 1) {
+            
         tempo = millis() + 500;
 
         digitalWrite(pin_buzzer, HIGH);
@@ -384,12 +386,29 @@ void buzzer() {
 
         digitalWrite(pin_buzzer, LOW);
 
-        apagarDisplay();
-        tempo = millis() + 500;
+    } else {
 
-        while(tempo > millis()) { }
+        for(int i = 0; i < 3; i++) {
+            
+            tempo = millis() + 500;
+
+            digitalWrite(pin_buzzer, HIGH);
+
+            while(tempo > millis()) {
+                multiplexarDisplay();
+            }
+
+            digitalWrite(pin_buzzer, LOW);
+
+            apagarDisplay();
+            tempo = millis() + 500;
+
+            while(tempo > millis()) { }
+
+        }
 
     }
+    buzzer_simples = 0;
 
 }
 
@@ -636,7 +655,7 @@ void loop() {
     if(acionar_buzzer) {
         buzzer();
     }
-
+    
     if(estado_display == 0){
         standbyDisplay();
     } else{
@@ -650,7 +669,7 @@ void loop() {
                 break;
             case 2:
                 if (tempo_inicial != 0 && sensores_finalizados == 0) {
-                    separarNumeroComposto(millis() - tempo_inicial);
+                    separarNumeroComposto((millis() - tempo_inicial)/10);
                     multiplexarDisplay();
                 } else if (sensores_finalizados == 1) {
                     separarNumeroComposto(arraySensor[arraySensor.size()-1]);
