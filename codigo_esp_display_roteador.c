@@ -44,10 +44,12 @@ const int pin_displays[6] = {14, 27, 26, 25, 33, 32};
 
 // Variaveis de controle
 const int tempo_debounce = 500;
+const int pin_entrada_pistola = 35;
 const int pin_entrada_sensor_inicial = 36;
 const int pin_entrada_sensor_intermediario = 39;
 const int pin_entrada_sensor_final = 34;
 const int pin_buzzer = 19;
+const int pin_bolinhas = 13;
 
 int tempo_delay = 3000;
 int estado_display = 0; // Ligado ou desligado
@@ -61,6 +63,9 @@ int acionar_buzzer_cronometro = 0;
 int buzzer_cronometro = 0;
 int numeroInicial = 0;
 int buzzer_simples = 0;
+
+// 0 -> Pistola | 1 -> Sensor Inicial
+int tipo_acionamento_sensor = 0;
 
 int sensores_finalizados = 0;
 
@@ -185,6 +190,7 @@ void apagarDisplay() {
     for (int i = 0; i < 6; i++) {
         digitalWrite(pin_displays[i], LOW);
     }
+
 }
 
 void separarNumeroComposto(int numero) {
@@ -306,6 +312,7 @@ void funcao_cronometro() {
 
 void funcao_placar() {
 
+    digitalWrite(pin_bolinhas, LOW);
     digitalWrite(pin_displays[2], LOW);
     digitalWrite(pin_displays[3], LOW);
 
@@ -328,14 +335,30 @@ void funcao_placar() {
     
 }
 
-void IRAM_ATTR sensorInicialContador() {
+void IRAM_ATTR pistolaSensor() {
 
-    if(funcao == 2 && estado_display != 0 && tempo_inicial == 0) {
-Serial.print("inicial");
+    if(funcao == 2 && estado_display != 0 && tempo_inicial == 0 && tipo_acionamento_sensor == 0) {
+        Serial.print("pistola");
         tempo_inicial = millis();
         timestamp_ultimo_acionamento = millis();
         buzzer_simples = 1;
         acionar_buzzer = 1;
+    }
+
+}
+
+void IRAM_ATTR sensorInicialContador() {
+
+    if(funcao == 2 && estado_display != 0) {
+
+        if (tipo_acionamento_sensor == 1) {
+            tempo_inicial = millis();
+            buzzer_simples = 1;
+            acionar_buzzer = 1;
+        } else {
+            timestamp_ultimo_acionamento = millis();
+        }
+
     }
 
 }
@@ -345,11 +368,8 @@ void IRAM_ATTR sensorIntermediarioContador() {
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
-Serial.print("inter ");
             timestamp_ultimo_acionamento = millis();
-            //valores_sensor[ent] = timestamp_ultimo_acionamento - tempo_inicial;
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial)/10);
-
         }
     }
 
@@ -359,13 +379,12 @@ void IRAM_ATTR sensorFinalContador() {
 
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
-        timestamp_ultimo_acionamento = millis();
-Serial.print("final ");
-        //valores_sensor["final"] = timestamp_ultimo_acionamento - tempo_inicial;
-        arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial)/10);
-
-        sensores_finalizados = 1;
-        acionar_buzzer = 1;
+        if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
+            timestamp_ultimo_acionamento = millis();
+            arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial)/10);
+            sensores_finalizados = 1;
+            acionar_buzzer = 1;
+        }
     }
 }
 
@@ -451,8 +470,9 @@ void setup() {
     pinMode(pin_f, OUTPUT);
     pinMode(pin_g, OUTPUT);
 
-    for (int i = 0; i < 6; i++)
-    {
+    pinMode(pin_bolinhas, OUTPUT);
+
+    for (int i = 0; i < 6; i++) {
         pinMode(pin_displays[i], OUTPUT);
     }
 
@@ -462,6 +482,7 @@ void setup() {
 
     pinMode(pin_buzzer, OUTPUT);
 
+    attachInterrupt(pin_entrada_pistola, pistolaSensor, RISING);
     attachInterrupt(pin_entrada_sensor_inicial, sensorInicialContador, RISING);
     attachInterrupt(pin_entrada_sensor_intermediario, sensorIntermediarioContador, RISING);
     attachInterrupt(pin_entrada_sensor_final, sensorFinalContador, RISING);
@@ -526,22 +547,6 @@ void setup() {
     });
     server.addHandler(alterarNumerosPlacar);
 
-    AsyncCallbackJsonWebHandler *testarNumero =
-    new AsyncCallbackJsonWebHandler("/testarNumero", [](AsyncWebServerRequest *request, String json) {
-                              
-        DynamicJsonDocument data(1024);
-        deserializeJson(data, json);
-
-        numeroInicial = data["numero"];
-        funcao = 4;
-        estado_display = 1;
-    
-        request->send(200, "text/plain"); 
-
-    });
-    server.addHandler(testarNumero);
-
-
     AsyncCallbackJsonWebHandler *pausarCronometro =
     new AsyncCallbackJsonWebHandler("/pausarCronometro", [](AsyncWebServerRequest *request, String json) {
 
@@ -594,19 +599,6 @@ void setup() {
     server.addHandler(contadorDecrescente);
 */
 
-    AsyncCallbackJsonWebHandler *changeDelay =
-    new AsyncCallbackJsonWebHandler("/delay", [](AsyncWebServerRequest *request, String json) {                             
-        
-        DynamicJsonDocument data(1024);
-        deserializeJson(data, json);
-
-        // Seta os numeros no display
-        tempo_delay = data["delay"];
-
-        request->send(200, "text/plain"); 
-    });
-    server.addHandler(changeDelay);
-
     AsyncCallbackJsonWebHandler *iniciarSensores =
     new AsyncCallbackJsonWebHandler("/iniciarSensores", [](AsyncWebServerRequest *request, String json) {                             
 
@@ -626,6 +618,15 @@ void setup() {
         request->send(200, "text/plain"); 
     });
     server.addHandler(interromperSensores);
+
+    AsyncCallbackJsonWebHandler *tipoAcionamentoSensor =
+    new AsyncCallbackJsonWebHandler("/tipoAcionamentoSensor", [](AsyncWebServerRequest *request, String json) {                             
+        
+        tipo_acionamento_sensor = data["tipo_acionamento_sensor"];
+
+        request->send(200, "text/plain"); 
+    });
+    server.addHandler(tipoAcionamentoSensor);
 
     server.on("/dadosSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
 
