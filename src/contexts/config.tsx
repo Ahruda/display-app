@@ -18,7 +18,7 @@ export const ConfigContext = createContext<configContextProps>({})
 export function ConfigProvider({ children }: any) {
   const [funcao, setFuncao] = useState(0)
   const [estadoDisplay, setEstadoDisplay] = useState(0)
-  const [ip, setIp] = useState('')
+  const [ip, setIp] = useState('192.168.004.001')
 
   const showToast = (mensagem: string) => {
     ToastAndroid.show(mensagem, ToastAndroid.SHORT)

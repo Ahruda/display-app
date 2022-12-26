@@ -21,8 +21,8 @@ export const Linha = styled.View`
   border-bottom-width: 1px;
   padding-top: 10px;
 `
-export const Scroll = styled.ScrollView`
-
+export const Container = styled.ScrollView`
+  width: 90%;
 `
 
 export const Status = styled.Text`
@@ -30,6 +30,10 @@ export const Status = styled.Text`
   font-weight: bold;
 `
 
+export const SubTitulo = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+`
 
 export const TabelaDados = styled.View`
   display: flex;
@@ -38,4 +42,12 @@ export const TabelaDados = styled.View`
   border: 1px;
   padding: 10px;
   margin-bottom: 56px;
+`
+
+export const TabelaRadio = styled.View`
+  display: flex;
+  flex-direction: column;
+  border: 1px;
+  padding: 5px;
+  margin-bottom: 10px;
 `

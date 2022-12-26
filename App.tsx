@@ -80,6 +80,7 @@ export default function App() {
                 ),
               }}
             />
+            {/* 
             <Tab.Screen
               name="Configuração"
               component={Configuracao}
@@ -93,6 +94,7 @@ export default function App() {
                 ),
               }}
             />
+            */}
           </Tab.Navigator>
         </NavigationContainer>
       </ConfigProvider>
