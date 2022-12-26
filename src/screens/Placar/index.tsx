@@ -43,7 +43,9 @@ export default function Placar() {
   const alterarTimeA = (numero: number) => {
     if(numero < 0) {
       setTimeA(0)
-    } else {
+    } else if(numero > 99) {
+      setTimeA(99)
+    } else{
       setTimeA(numero)
     }
   }
@@ -51,6 +53,8 @@ export default function Placar() {
   const alterarTimeB = (numero: number) => {
     if(numero < 0) {
       setTimeB(0)
+    } else if(numero > 99) {
+      setTimeB(99)
     } else {
       setTimeB(numero)
     }

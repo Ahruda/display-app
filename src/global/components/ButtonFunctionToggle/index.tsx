@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useContext, useEffect } from 'react'
+import { Text, View } from 'react-native'
 import Toggle from 'react-native-toggle-element'
 import { ConfigContext } from '../../../contexts/config'
 
@@ -27,27 +28,30 @@ export default function ButtonFunctionToggle(props: ToggleProps) {
   }
 
   return (
+    <View style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
+    <Text style={{marginRight:5}}>OFF</Text>
     <Toggle
       value={(estadoDisplay ? true : false) && props.funcao == funcao}
       onPress={buttonFunction}
       style={{}}
-      //leftTitle="OFF"
-      rightTitle="Ativo"
       trackBar={{
-        activeBackgroundColor: '#9fcafa',
-        inActiveBackgroundColor: '#dadada',
-        borderActiveColor: '#2d76ff',
-        borderInActiveColor: '#9e9e9e',
+        activeBackgroundColor: '#a1eeb7',
+        inActiveBackgroundColor: '#e6a1a1',
+        borderActiveColor: '#0f9c37',
+        borderInActiveColor: '#b92d2d',
         borderWidth: 3,
         width: 100,
         height: 30,
         radius: 50,
       }}
       thumbButton={{
-        activeBackgroundColor: '#d4e8ff',
-        inActiveBackgroundColor: '#c2c2c2',
+        activeBackgroundColor: '#45bd67',
+        inActiveBackgroundColor: '#d46666',
+        
 
       }}
     />
+    <Text style={{marginLeft:5}}>ON</Text>
+    </View>
   )
 }

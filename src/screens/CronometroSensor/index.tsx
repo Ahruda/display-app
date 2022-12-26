@@ -9,7 +9,6 @@ import {Linha, SubTitulo, TabelaDados, TabelaRadio } from './styles'
 import { RadioButton, Text as TextRadio } from 'react-native-paper';
 import Container from '../../global/components/Container/Container'
 
-
 export default function CronometroSensor() {
   const { funcao, estadoDisplay, ip } = useContext(ConfigContext)
   const [dadosSensor, setDadosSensor] = useState<number[]>([])
@@ -119,8 +118,8 @@ export default function CronometroSensor() {
 
           <TabelaRadio>
             <RadioButton.Group onValueChange={newValue => setTipoAcionamento(newValue)} value={tipoAcionamento}>
-              <RadioButton.Item label="Botão" value="botao" />
-              <RadioButton.Item label="Primeiro Sensor" value="sensor" />
+              <RadioButton.Item label="Botão" value="botao" color='#2c8af2' />
+              <RadioButton.Item label="Primeiro Sensor" value="sensor" color='#2c8af2'/>
             </RadioButton.Group>
 
             <BotaoAtualizarDisplay

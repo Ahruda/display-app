@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 
-import { Dimensions, View, Modal, Text, Button } from 'react-native'
+import { Dimensions, View, Modal, Text } from 'react-native'
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
 
 import {} from 'react-native'
@@ -8,20 +8,19 @@ import {
   ContainerModal,
   ModalButtons,
   ModalInputs,
-  TextDecimal,
   ButtonInput,
   ContainerNumero,
   ViewWrapper,
   TextInputTime,
   TextoDigito,
 } from './styles'
-import { BtnGeral, TextBtn, Titulo, Header, Container } from '../../global/styles'
+import { BtnGeral, TextBtn, Titulo, Header } from '../../global/styles'
 import { ConfigContext } from '../../contexts/config'
+import Container from '../../global/components/Container/Container'
 import axios from 'axios'
 
-const { width } = Dimensions.get('window')
-
 export default function Cronometro() {
+
   const { funcao, estadoDisplay, ip } = useContext(ConfigContext)
 
   const [isModalVisible, setModalVisible] = useState(false)
@@ -102,8 +101,9 @@ export default function Cronometro() {
     minutos = minutos + horas * 60
     segundos = segundos + minutos * 60
 
+    toggleModalVisibility()
+
     if(funcao == 1 && estadoDisplay == 1){
-      toggleModalVisibility
       axios
       .post(`http://${ip}/alterarNumeros`, {
         "segundos": segundos
@@ -133,28 +133,24 @@ export default function Cronometro() {
         <ButtonFunctionToggle funcao={1}></ButtonFunctionToggle>
       </Header>
 
-      <Container
-        style={{
-          display: (funcao == 1 && estadoDisplay == 1 ? 'flex' : 'none' ),
-        }}
-      >
-        <View style={{display: 'flex', alignItems: 'center'}}>
-          
+      <Container funcaoTela={1}>
+        <>
           <BtnGeral
             style={{ marginBottom: 20, marginTop: 50 }}
             onPress={changeStateTimer}
           >
             <TextBtn>{estadoTimer ? 'Pausar' : 'Iniciar'}</TextBtn>
           </BtnGeral>
-          <BtnGeral style={{ marginBottom: 20 }} onPress={restartTimer}>
+          <BtnGeral style={{ marginBottom: 20, backgroundColor:(estadoTimer) ? 'gray' : '#2c8af2' }} onPress={restartTimer} disabled={estadoTimer}>
             <TextBtn>Reiniciar</TextBtn>
           </BtnGeral>
-          <BtnGeral style={{ marginBottom: 20 }} onPress={toggleModalVisibility}>
+          <BtnGeral style={{ marginBottom: 20, backgroundColor:(estadoTimer) ? 'gray' : '#2c8af2' }} onPress={toggleModalVisibility} disabled={estadoTimer}>
             <TextBtn>Definir tempo</TextBtn>
           </BtnGeral>
           <BtnGeral
-            style={{ marginBottom: 20, marginTop: 50 }}
+            style={{ marginBottom: 20, marginTop: 50, backgroundColor:(estadoTimer) ? 'gray' : '#2c8af2' }}
             onPress={changeDecrescenteTimer}
+            disabled={estadoTimer}
           >
             <TextBtn>Modo: {decrescente ? 'Decrescente' : 'Crescente'}</TextBtn>
           </BtnGeral>
@@ -232,7 +228,7 @@ export default function Cronometro() {
               </ContainerModal>
             </ViewWrapper>
           </Modal>
-        </View>
+        </>
       </Container>
     </View>
     )

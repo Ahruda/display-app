@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 export const BtnGeral = styled.TouchableOpacity`
   background-color: #2c8af2;
   border-radius: 10px;
-  width: 60%;
+  width: 100%;
   height: 50px;
   display: flex;
   flex-direction: column;
