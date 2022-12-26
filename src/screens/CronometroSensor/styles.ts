@@ -38,7 +38,7 @@ export const TabelaDados = styled.View`
   align-items: center;
   border: 1px;
   padding: 10px;
-  margin-bottom: 56px;
+  margin-bottom: 100px;
 `
 
 export const TabelaRadio = styled.View`

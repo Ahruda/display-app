@@ -350,15 +350,18 @@ void IRAM_ATTR pistolaSensor() {
 void IRAM_ATTR sensorInicialContador() {
 
     if(funcao == 2 && estado_display != 0) {
-
         if (tipo_acionamento_sensor == 1) {
-            tempo_inicial = millis();
-            buzzer_simples = 1;
-            acionar_buzzer = 1;
-        } else {
+            if(tempo_inicial == 0){
+                Serial.print("sensor inicial");
+                tempo_inicial = millis();
+                buzzer_simples = 1;
+                acionar_buzzer = 1;
+            }
+        } else if(arraySensor.size() == 0) {
+            Serial.print("sensor inicial pistola");
             timestamp_ultimo_acionamento = millis();
+            arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
         }
-
     }
 
 }
@@ -368,8 +371,9 @@ void IRAM_ATTR sensorIntermediarioContador() {
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
+            Serial.print("intermediario");
             timestamp_ultimo_acionamento = millis();
-            arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial)/10);
+            arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
         }
     }
 
@@ -380,8 +384,9 @@ void IRAM_ATTR sensorFinalContador() {
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
+            Serial.print("final");
             timestamp_ultimo_acionamento = millis();
-            arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial)/10);
+            arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
             sensores_finalizados = 1;
             acionar_buzzer = 1;
         }
@@ -476,6 +481,7 @@ void setup() {
         pinMode(pin_displays[i], OUTPUT);
     }
 
+    pinMode(pin_entrada_pistola, INPUT);
     pinMode(pin_entrada_sensor_inicial, INPUT);
     pinMode(pin_entrada_sensor_intermediario, INPUT);
     pinMode(pin_entrada_sensor_final, INPUT);
@@ -622,6 +628,9 @@ void setup() {
     AsyncCallbackJsonWebHandler *tipoAcionamentoSensor =
     new AsyncCallbackJsonWebHandler("/tipoAcionamentoSensor", [](AsyncWebServerRequest *request, String json) {                             
         
+        DynamicJsonDocument data(1024);
+        deserializeJson(data, json);
+
         tipo_acionamento_sensor = data["tipo_acionamento_sensor"];
 
         request->send(200, "text/plain"); 

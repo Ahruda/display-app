@@ -16,8 +16,6 @@ export default function CronometroSensor() {
   const [statusRequisicao, setStatusRequisicao] = useState(0) // 1 para req em andamento
   const [tipoAcionamento, setTipoAcionamento] = useState('botao');
   
-  //const [numero, setNumero] = useState(1)
-
   function timeout(delay: number) {
     return new Promise( res => {
       setTimeout(res, delay)
@@ -97,7 +95,20 @@ export default function CronometroSensor() {
       })
     }
   }
-    
+
+  const mudarTipoAcionamento = (value: string) => {
+    setTipoAcionamento(value)
+    axios
+    .post(`http://${ip}/tipoAcionamentoSensor`, {
+      tipo_acionamento_sensor: (value == "botao") ? 0 : 1,
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+
+      }
+    })
+  }
+
   return (
     <View
       style={{
@@ -117,9 +128,11 @@ export default function CronometroSensor() {
           <SubTitulo>Modos de acionamento</SubTitulo>
 
           <TabelaRadio>
-            <RadioButton.Group onValueChange={newValue => setTipoAcionamento(newValue)} value={tipoAcionamento}>
-              <RadioButton.Item label="Botão" value="botao" color='#2c8af2' />
-              <RadioButton.Item label="Primeiro Sensor" value="sensor" color='#2c8af2'/>
+            <RadioButton.Group onValueChange={newValue => mudarTipoAcionamento(newValue)} value={tipoAcionamento}>
+              <RadioButton.Item label="Botão" value="botao" color='#2c8af2' 
+              disabled={(statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1) ? true : false} />
+              <RadioButton.Item label="Primeiro Sensor" value="sensor" color='#2c8af2'
+              disabled={(statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1) ? true : false} />
             </RadioButton.Group>
 
             <BotaoAtualizarDisplay
@@ -131,11 +144,10 @@ export default function CronometroSensor() {
                     : iniciarSensores}
               titulo = {
                 statusSensores == 1 
-                  ? 'Reiniciar Sensores' 
+                  ? 'Reiniciar' 
                   : statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1
-                    ? 'Interromper Sensores' 
-                    : 'Iniciar Sensores'}
-
+                    ? 'Interromper' 
+                    : 'Iniciar'}
             ></BotaoAtualizarDisplay>
 
           </TabelaRadio>
@@ -172,11 +184,11 @@ export default function CronometroSensor() {
           <SubTitulo>Dados dos sensores</SubTitulo>
           <TabelaDados>
             {dadosSensor.map((item, index) => {
-              
+              let itemString = item.toString()
               return (
                 <Linha key={index + 1}>
                   <Text>Sensor #{index + 1}</Text>
-                  <Text>{item} ms</Text>
+                  <Text>{itemString.substring(itemString.length - 3, 0) + "." + itemString.substring(itemString.length, itemString.length - 3)}s</Text>
                 </Linha>
               )
             })}
