@@ -4,10 +4,11 @@ import { ActivityIndicator, Button, ScrollView, Text, View } from 'react-native'
 import { ConfigContext } from '../../contexts/config'
 import BotaoAtualizarDisplay from '../../global/components/BotaoAtualizarDisplay'
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
-import Display from '../../global/components/Display'
-import { Header, Titulo, Container } from '../../global/styles'
-import {Linha, Scroll, SubTitulo, TabelaDados, TabelaRadio } from './styles'
+import { Header, Titulo } from '../../global/styles'
+import {Linha, SubTitulo, TabelaDados, TabelaRadio } from './styles'
 import { RadioButton, Text as TextRadio } from 'react-native-paper';
+import Container from '../../global/components/Container/Container'
+
 
 export default function CronometroSensor() {
   const { funcao, estadoDisplay, ip } = useContext(ConfigContext)
@@ -112,76 +113,76 @@ export default function CronometroSensor() {
         <ButtonFunctionToggle funcao={2}></ButtonFunctionToggle>
       </Header>
 
-      <Container
-        style={{display: (funcao == 2 && estadoDisplay == 1 ? 'flex' : 'none' )}}
-      >
-        <SubTitulo>Modos de acionamento</SubTitulo>
+      <Container funcaoTela={2}>
+        <>
+          <SubTitulo>Modos de acionamento</SubTitulo>
 
-        <TabelaRadio>
-          <RadioButton.Group onValueChange={newValue => setTipoAcionamento(newValue)} value={tipoAcionamento}>
-            <RadioButton.Item label="Botão" value="botao" />
-            <RadioButton.Item label="Primeiro Sensor" value="sensor" />
-          </RadioButton.Group>
+          <TabelaRadio>
+            <RadioButton.Group onValueChange={newValue => setTipoAcionamento(newValue)} value={tipoAcionamento}>
+              <RadioButton.Item label="Botão" value="botao" />
+              <RadioButton.Item label="Primeiro Sensor" value="sensor" />
+            </RadioButton.Group>
 
-          <BotaoAtualizarDisplay
-            onPressFunction = {
-              statusSensores == 1 
-                ? iniciarSensores 
-                :  statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1
-                  ? interromperSensores 
-                  : iniciarSensores}
-            titulo = {
-              statusSensores == 1 
-                ? 'Reiniciar Sensores' 
-                : statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1
-                  ? 'Interromper Sensores' 
-                  : 'Iniciar Sensores'}
+            <BotaoAtualizarDisplay
+              onPressFunction = {
+                statusSensores == 1 
+                  ? iniciarSensores 
+                  :  statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1
+                    ? interromperSensores 
+                    : iniciarSensores}
+              titulo = {
+                statusSensores == 1 
+                  ? 'Reiniciar Sensores' 
+                  : statusRequisicao == 1 && funcao == 2 && estadoDisplay == 1
+                    ? 'Interromper Sensores' 
+                    : 'Iniciar Sensores'}
 
-          ></BotaoAtualizarDisplay>
+            ></BotaoAtualizarDisplay>
 
-        </TabelaRadio>
+          </TabelaRadio>
 
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            width: '80%',
-            alignItems: 'center',
-            padding: 10,
-          }}
-        >
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              width: '80%',
+              alignItems: 'center',
+              padding: 10,
+            }}
+          >
 
-        {/* <ActivityIndicator
-            size="large"
-            color="#0000ff"
-            style={{ paddingRight: 10 }}
-          /> */}
+          {/* <ActivityIndicator
+              size="large"
+              color="#0000ff"
+              style={{ paddingRight: 10 }}
+            /> */}
 
-        {/*
-        <Status>Status: </Status>  
+          {/*
+          <Status>Status: </Status>  
 
-        {(funcao == 2 && estadoDisplay == 1 && statusRequisicao == 1) 
-          ? (statusSensores == 1 )
-            ? <Status>Sensores Finalizados!</Status> 
-            : <Status>Coletando dados...</Status>
-          : <Status>Sensores desabilitados!</Status>}
+          {(funcao == 2 && estadoDisplay == 1 && statusRequisicao == 1) 
+            ? (statusSensores == 1 )
+              ? <Status>Sensores Finalizados!</Status> 
+              : <Status>Coletando dados...</Status>
+            : <Status>Sensores desabilitados!</Status>}
 
-        */}
-        </View>
+          */}
+          </View>
 
-        <SubTitulo>Dados dos sensores</SubTitulo>
-        <TabelaDados>
-          {dadosSensor.map((item, index) => {
-            
-            return (
-              <Linha key={index + 1}>
-                <Text>Sensor #{index + 1}</Text>
-                <Text>{item} ms</Text>
-              </Linha>
-            )
-          })}
-        </TabelaDados>
+          <SubTitulo>Dados dos sensores</SubTitulo>
+          <TabelaDados>
+            {dadosSensor.map((item, index) => {
+              
+              return (
+                <Linha key={index + 1}>
+                  <Text>Sensor #{index + 1}</Text>
+                  <Text>{item} ms</Text>
+                </Linha>
+              )
+            })}
+          </TabelaDados>
+        </>
       </Container>
     </View>
   )

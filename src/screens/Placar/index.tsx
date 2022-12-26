@@ -4,7 +4,6 @@ import { Text, View } from 'react-native'
 import { ConfigContext } from '../../contexts/config'
 import BotaoAtualizarDisplay from '../../global/components/BotaoAtualizarDisplay'
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
-import { Container } from '../../global/components/Container/styles'
 import Display from '../../global/components/Display'
 import { Header } from '../../global/styles'
 import {
@@ -14,14 +13,18 @@ import {
   Titulo,
   ContainerPlacar,
 } from './styles'
+import Container from '../../global/components/Container/Container'
 
 export default function Placar() {
-  const { funcao, estadoDisplay, ip } = useContext(ConfigContext)
+  const { ip } = useContext(ConfigContext)
   const [timeA, setTimeA] = useState(0)
   const [timeB, setTimeB] = useState(0)
 
+  useEffect(()=>{
+    updateDisplay
+  },[timeA,timeB]);
+
   const updateDisplay = () => {
-  
     axios
       .post(`http://${ip}/alterarNumerosPlacar`, {
         numero_1: timeB % 10,
@@ -33,10 +36,24 @@ export default function Placar() {
     })
     .then(function (response) {
       if (response.status === 200) {
-        
       }
     })
-    
+  }
+
+  const alterarTimeA = (numero: number) => {
+    if(numero < 0) {
+      setTimeA(0)
+    } else {
+      setTimeA(numero)
+    }
+  }
+
+  const alterarTimeB = (numero: number) => {
+    if(numero < 0) {
+      setTimeB(0)
+    } else {
+      setTimeB(numero)
+    }
   }
 
   return (
@@ -48,42 +65,38 @@ export default function Placar() {
         <ButtonFunctionToggle funcao={3}></ButtonFunctionToggle>
       </Header>
 
-      <Container
-        style={{display: (funcao == 3 && estadoDisplay == 1 ? 'flex' : 'none' )}}
-      >        
-        <ContainerTime>
-          <Titulo>Time A</Titulo>
-          <ContainerPlacar>
-            <Button title="-3" onPress={() => setTimeA(timeA - 3)} />
-            <Button title="-2" onPress={() => setTimeA(timeA - 2)} />
-            <Button title="-1" onPress={() => setTimeA(timeA - 1)} />
+      <Container funcaoTela={3}>
+        <>
+          <ContainerTime>
+            <Titulo>Time A</Titulo>
+            <ContainerPlacar>
+              <Button title="-3" onPress={() => alterarTimeA(timeA - 3)} />
+              <Button title="-2" onPress={() => alterarTimeA(timeA - 2)} />
+              <Button title="-1" onPress={() => alterarTimeA(timeA - 1)} />
 
-            <PlacarTime>{timeA}</PlacarTime>
-            <Button title="+1" onPress={() => setTimeA(timeA + 1)} />
-            <Button title="+2" onPress={() => setTimeA(timeA + 2)} />
-            <Button title="+3" onPress={() => setTimeA(timeA + 3)} />
-          </ContainerPlacar>
-          <Button title="Zerar placar" onPress={() => setTimeA(0)} />
-        </ContainerTime>
-        <ContainerTime>
-          <Titulo>Time B</Titulo>
-          <ContainerPlacar>
-            <Button title="-3" onPress={() => setTimeB(timeB - 3)} />
-            <Button title="-2" onPress={() => setTimeB(timeB - 2)} />
-            <Button title="-1" onPress={() => setTimeB(timeB - 1)} />
+              <PlacarTime style={{color:'green', borderColor:'green'}}>{timeA < 10 ? '0' + timeA : timeA}</PlacarTime>
+              <Button title="+1" onPress={() => alterarTimeA(timeA + 1)} />
+              <Button title="+2" onPress={() => alterarTimeA(timeA + 2)} />
+              <Button title="+3" onPress={() => alterarTimeA(timeA + 3)} />
+            </ContainerPlacar>
+            <Button title="Zerar placar" onPress={() => setTimeA(0)} />
+          </ContainerTime>
 
-            <PlacarTime>{timeB}</PlacarTime>
-            <Button title="+1" onPress={() => setTimeB(timeB + 1)} />
-            <Button title="+2" onPress={() => setTimeB(timeB + 2)} />
-            <Button title="+3" onPress={() => setTimeB(timeB + 3)} />
-          </ContainerPlacar>
-          <Button title="Zerar placar" onPress={() => setTimeB(0)} />
+          <ContainerTime>
+            <Titulo>Time B</Titulo>
+            <ContainerPlacar>
+              <Button title="-3" onPress={() => alterarTimeB(timeB - 3)} />
+              <Button title="-2" onPress={() => alterarTimeB(timeB - 2)} />
+              <Button title="-1" onPress={() => alterarTimeB(timeB - 1)} />
 
-        </ContainerTime>
-        <BotaoAtualizarDisplay
-          onPressFunction={updateDisplay}
-          titulo="Atualizar display"
-        ></BotaoAtualizarDisplay>
+              <PlacarTime style={{color:'red', borderColor:'red'}}>{timeB < 10 ? '0' + timeB : timeB}</PlacarTime>
+              <Button title="+1" onPress={() => alterarTimeB(timeB + 1)} />
+              <Button title="+2" onPress={() => alterarTimeB(timeB + 2)} />
+              <Button title="+3" onPress={() => alterarTimeB(timeB + 3)} />
+            </ContainerPlacar>
+            <Button title="Zerar placar" onPress={() => setTimeB(0)} />
+          </ContainerTime>
+        </>
       </Container>
     </View>
   )

@@ -1,9 +1,7 @@
-//<div style=display: 'flex', alignItems: 'center', justify{Content: ''}></div>
-
 import styled from 'styled-components/native'
 
 export const ContainerPlacar = styled.View`
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -15,6 +13,7 @@ export const ContainerPlacar = styled.View`
 export const ContainerTime = styled.View`
   margin: 25px 0 25px 0;
 `
+
 export const NomeTime = styled.Text`
   font-size: 13px;
 `
@@ -30,9 +29,11 @@ export const PlacarTime = styled.Text`
   justify-content: center;
   align-items: center;
 `
+
 export const Button = styled.Button`
   font-size: 33px;
 `
+
 export const Titulo = styled.Text`
   font-size: 23px;
   text-align: center;
