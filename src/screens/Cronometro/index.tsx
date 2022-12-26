@@ -15,7 +15,7 @@ import {
   TextInputTime,
   TextoDigito,
 } from './styles'
-import { BtnGeral, TextBtn, Titulo, Header } from '../../global/styles'
+import { BtnGeral, TextBtn, Titulo, Header, Container } from '../../global/styles'
 import { ConfigContext } from '../../contexts/config'
 import axios from 'axios'
 
@@ -125,105 +125,111 @@ export default function Cronometro() {
 
 
   return(
-      <View
+    <View
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       <Header>
         <Titulo>Cronometro</Titulo>
         <ButtonFunctionToggle funcao={1}></ButtonFunctionToggle>
       </Header>
-      <BtnGeral
-        style={{ marginBottom: 20, marginTop: 50 }}
-        onPress={changeStateTimer}
+
+      <Container
+        style={{display: (funcao == 1 && estadoDisplay == 1 ? 'flex' : 'none' )}}
       >
-        <TextBtn>{estadoTimer ? 'Pausar' : 'Iniciar'}</TextBtn>
-      </BtnGeral>
-      <BtnGeral style={{ marginBottom: 20 }} onPress={restartTimer}>
-        <TextBtn>Reiniciar</TextBtn>
-      </BtnGeral>
-      <BtnGeral style={{ marginBottom: 20 }} onPress={toggleModalVisibility}>
-        <TextBtn>Definir tempo</TextBtn>
-      </BtnGeral>
-      <BtnGeral
-        style={{ marginBottom: 20, marginTop: 50 }}
-        onPress={changeDecrescenteTimer}
-      >
-        <TextBtn>Modo: {decrescente ? 'Decrescente' : 'Crescente'}</TextBtn>
-      </BtnGeral>
 
-      <Modal
-        animationType="slide"
-        transparent
-        visible={isModalVisible}
-        presentationStyle="overFullScreen"
-        onDismiss={toggleModalVisibility}
-      >
-        <ViewWrapper>
-          <ContainerModal>
+        <BtnGeral
+          style={{ marginBottom: 20, marginTop: 50 }}
+          onPress={changeStateTimer}
+        >
+          <TextBtn>{estadoTimer ? 'Pausar' : 'Iniciar'}</TextBtn>
+        </BtnGeral>
+        <BtnGeral style={{ marginBottom: 20 }} onPress={restartTimer}>
+          <TextBtn>Reiniciar</TextBtn>
+        </BtnGeral>
+        <BtnGeral style={{ marginBottom: 20 }} onPress={toggleModalVisibility}>
+          <TextBtn>Definir tempo</TextBtn>
+        </BtnGeral>
+        <BtnGeral
+          style={{ marginBottom: 20, marginTop: 50 }}
+          onPress={changeDecrescenteTimer}
+        >
+          <TextBtn>Modo: {decrescente ? 'Decrescente' : 'Crescente'}</TextBtn>
+        </BtnGeral>
 
-            <Text style={{fontSize:24, marginBottom:10, marginTop:20}}>Definir Tempo</Text>
+        <Modal
+          animationType="slide"
+          transparent
+          visible={isModalVisible}
+          presentationStyle="overFullScreen"
+          onDismiss={toggleModalVisibility}
+        >
+          <ViewWrapper>
+            <ContainerModal>
 
-            <ModalInputs>
+              <Text style={{fontSize:24, marginBottom:10, marginTop:20}}>Definir Tempo</Text>
 
-              <ContainerNumero>
-                <ButtonInput onPress={ () => numero6 == 9 ? setNumero6(0) : setNumero6(numero6 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
-                <TextInputTime>{numero6}</TextInputTime>
-                <ButtonInput onPress={ () => numero6 == 0 ? setNumero6(9) : setNumero6(numero6 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
-              </ContainerNumero>
-              
-              <ContainerNumero>
-                <ButtonInput onPress={ () => numero5 == 9 ? setNumero5(0) : setNumero5(numero5 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
-                <TextInputTime>{numero5}</TextInputTime>
-                <ButtonInput onPress={ () => numero5 == 0 ? setNumero5(9) : setNumero5(numero5 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
-              </ContainerNumero>
+              <ModalInputs>
 
-              <Text style={{fontSize:26}}>:</Text>
+                <ContainerNumero>
+                  <ButtonInput onPress={ () => numero6 == 9 ? setNumero6(0) : setNumero6(numero6 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
+                  <TextInputTime>{numero6}</TextInputTime>
+                  <ButtonInput onPress={ () => numero6 == 0 ? setNumero6(9) : setNumero6(numero6 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
+                </ContainerNumero>
+                
+                <ContainerNumero>
+                  <ButtonInput onPress={ () => numero5 == 9 ? setNumero5(0) : setNumero5(numero5 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
+                  <TextInputTime>{numero5}</TextInputTime>
+                  <ButtonInput onPress={ () => numero5 == 0 ? setNumero5(9) : setNumero5(numero5 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
+                </ContainerNumero>
 
-              <ContainerNumero>
-                <ButtonInput onPress={ () => numero4 == 5 ? setNumero4(0) : setNumero4(numero4 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
-                <TextInputTime>{numero4}</TextInputTime>
-                <ButtonInput onPress={ () => numero4 == 0 ? setNumero4(5) : setNumero4(numero4 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
-              </ContainerNumero>
+                <Text style={{fontSize:26}}>:</Text>
 
-              <ContainerNumero>
-                <ButtonInput onPress={ () => numero3 == 9 ? setNumero3(0) : setNumero3(numero3 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
-                <TextInputTime>{numero3}</TextInputTime>
-                <ButtonInput onPress={ () => numero3 == 0 ? setNumero3(9) : setNumero3(numero3 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
-              </ContainerNumero>
+                <ContainerNumero>
+                  <ButtonInput onPress={ () => numero4 == 5 ? setNumero4(0) : setNumero4(numero4 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
+                  <TextInputTime>{numero4}</TextInputTime>
+                  <ButtonInput onPress={ () => numero4 == 0 ? setNumero4(5) : setNumero4(numero4 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
+                </ContainerNumero>
 
-              <Text style={{fontSize:26}}>:</Text>
+                <ContainerNumero>
+                  <ButtonInput onPress={ () => numero3 == 9 ? setNumero3(0) : setNumero3(numero3 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
+                  <TextInputTime>{numero3}</TextInputTime>
+                  <ButtonInput onPress={ () => numero3 == 0 ? setNumero3(9) : setNumero3(numero3 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
+                </ContainerNumero>
 
-              <ContainerNumero>
-                <ButtonInput onPress={ () => numero2 == 5 ? setNumero2(0) : setNumero2(numero2 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
-                <TextInputTime>{numero2}</TextInputTime>
-                <ButtonInput onPress={ () => numero2 == 0 ? setNumero2(5) : setNumero2(numero2 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
-              </ContainerNumero>
+                <Text style={{fontSize:26}}>:</Text>
 
-              <ContainerNumero>
-                <ButtonInput onPress={ () => numero1 == 9 ? setNumero1(0) : setNumero1(numero1 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
-                <TextInputTime>{numero1}</TextInputTime>
-                <ButtonInput onPress={ () => numero1 == 0 ? setNumero1(9) : setNumero1(numero1 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
-              </ContainerNumero>
+                <ContainerNumero>
+                  <ButtonInput onPress={ () => numero2 == 5 ? setNumero2(0) : setNumero2(numero2 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
+                  <TextInputTime>{numero2}</TextInputTime>
+                  <ButtonInput onPress={ () => numero2 == 0 ? setNumero2(5) : setNumero2(numero2 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
+                </ContainerNumero>
+
+                <ContainerNumero>
+                  <ButtonInput onPress={ () => numero1 == 9 ? setNumero1(0) : setNumero1(numero1 + 1)}><TextoDigito>+</TextoDigito></ButtonInput>
+                  <TextInputTime>{numero1}</TextInputTime>
+                  <ButtonInput onPress={ () => numero1 == 0 ? setNumero1(9) : setNumero1(numero1 - 1)}><TextoDigito>-</TextoDigito></ButtonInput>
+                </ContainerNumero>
 
 
-            </ModalInputs>
-            <ModalButtons>
-              <BtnGeral
-                onPress={toggleModalVisibility}
-                style={{ width: '40%', height: '55%', marginRight: '5%' }}
-              >
-                <TextBtn>Cancelar</TextBtn>
-              </BtnGeral>
-              <BtnGeral
-                onPress={definirTimer}
-                style={{ width: '40%', height: '55%', marginLeft: '5%' }}
-              >
-                <TextBtn>Confirmar</TextBtn>
-              </BtnGeral>
-            </ModalButtons>
-          </ContainerModal>
-        </ViewWrapper>
-      </Modal>
+              </ModalInputs>
+              <ModalButtons>
+                <BtnGeral
+                  onPress={toggleModalVisibility}
+                  style={{ width: '40%', height: '55%', marginRight: '5%' }}
+                >
+                  <TextBtn>Cancelar</TextBtn>
+                </BtnGeral>
+                <BtnGeral
+                  onPress={definirTimer}
+                  style={{ width: '40%', height: '55%', marginLeft: '5%' }}
+                >
+                  <TextBtn>Confirmar</TextBtn>
+                </BtnGeral>
+              </ModalButtons>
+            </ContainerModal>
+          </ViewWrapper>
+        </Modal>
+      </Container>
     </View>
     )
 }

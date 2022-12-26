@@ -5,8 +5,8 @@ import { ConfigContext } from '../../contexts/config'
 import BotaoAtualizarDisplay from '../../global/components/BotaoAtualizarDisplay'
 import ButtonFunctionToggle from '../../global/components/ButtonFunctionToggle'
 import Display from '../../global/components/Display'
-import { Header, Titulo } from '../../global/styles'
-import { Container, Linha, Scroll, SubTitulo, TabelaDados, TabelaRadio } from './styles'
+import { Header, Titulo, Container } from '../../global/styles'
+import {Linha, Scroll, SubTitulo, TabelaDados, TabelaRadio } from './styles'
 import { RadioButton, Text as TextRadio } from 'react-native-paper';
 
 export default function CronometroSensor() {

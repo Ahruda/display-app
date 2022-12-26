@@ -16,7 +16,7 @@ import {
 } from './styles'
 
 export default function Placar() {
-  const { ip } = useContext(ConfigContext)
+  const { funcao, estadoDisplay, ip } = useContext(ConfigContext)
   const [timeA, setTimeA] = useState(0)
   const [timeB, setTimeB] = useState(0)
 
@@ -48,39 +48,43 @@ export default function Placar() {
         <ButtonFunctionToggle funcao={3}></ButtonFunctionToggle>
       </Header>
 
-      <ContainerTime>
-        <Titulo>Time A</Titulo>
-        <ContainerPlacar>
-          <Button title="-3" onPress={() => setTimeA(timeA - 3)} />
-          <Button title="-2" onPress={() => setTimeA(timeA - 2)} />
-          <Button title="-1" onPress={() => setTimeA(timeA - 1)} />
+      <Container
+        style={{display: (funcao == 3 && estadoDisplay == 1 ? 'flex' : 'none' )}}
+      >        
+        <ContainerTime>
+          <Titulo>Time A</Titulo>
+          <ContainerPlacar>
+            <Button title="-3" onPress={() => setTimeA(timeA - 3)} />
+            <Button title="-2" onPress={() => setTimeA(timeA - 2)} />
+            <Button title="-1" onPress={() => setTimeA(timeA - 1)} />
 
-          <PlacarTime>{timeA}</PlacarTime>
-          <Button title="+1" onPress={() => setTimeA(timeA + 1)} />
-          <Button title="+2" onPress={() => setTimeA(timeA + 2)} />
-          <Button title="+3" onPress={() => setTimeA(timeA + 3)} />
-        </ContainerPlacar>
-        <Button title="Zerar placar" onPress={() => setTimeA(0)} />
-      </ContainerTime>
-      <ContainerTime>
-        <Titulo>Time B</Titulo>
-        <ContainerPlacar>
-          <Button title="-3" onPress={() => setTimeB(timeB - 3)} />
-          <Button title="-2" onPress={() => setTimeB(timeB - 2)} />
-          <Button title="-1" onPress={() => setTimeB(timeB - 1)} />
+            <PlacarTime>{timeA}</PlacarTime>
+            <Button title="+1" onPress={() => setTimeA(timeA + 1)} />
+            <Button title="+2" onPress={() => setTimeA(timeA + 2)} />
+            <Button title="+3" onPress={() => setTimeA(timeA + 3)} />
+          </ContainerPlacar>
+          <Button title="Zerar placar" onPress={() => setTimeA(0)} />
+        </ContainerTime>
+        <ContainerTime>
+          <Titulo>Time B</Titulo>
+          <ContainerPlacar>
+            <Button title="-3" onPress={() => setTimeB(timeB - 3)} />
+            <Button title="-2" onPress={() => setTimeB(timeB - 2)} />
+            <Button title="-1" onPress={() => setTimeB(timeB - 1)} />
 
-          <PlacarTime>{timeB}</PlacarTime>
-          <Button title="+1" onPress={() => setTimeB(timeB + 1)} />
-          <Button title="+2" onPress={() => setTimeB(timeB + 2)} />
-          <Button title="+3" onPress={() => setTimeB(timeB + 3)} />
-        </ContainerPlacar>
-        <Button title="Zerar placar" onPress={() => setTimeB(0)} />
+            <PlacarTime>{timeB}</PlacarTime>
+            <Button title="+1" onPress={() => setTimeB(timeB + 1)} />
+            <Button title="+2" onPress={() => setTimeB(timeB + 2)} />
+            <Button title="+3" onPress={() => setTimeB(timeB + 3)} />
+          </ContainerPlacar>
+          <Button title="Zerar placar" onPress={() => setTimeB(0)} />
 
-      </ContainerTime>
-      <BotaoAtualizarDisplay
-        onPressFunction={updateDisplay}
-        titulo="Atualizar display"
-      ></BotaoAtualizarDisplay>
+        </ContainerTime>
+        <BotaoAtualizarDisplay
+          onPressFunction={updateDisplay}
+          titulo="Atualizar display"
+        ></BotaoAtualizarDisplay>
+      </Container>
     </View>
   )
 }

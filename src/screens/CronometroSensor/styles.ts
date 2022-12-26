@@ -21,9 +21,6 @@ export const Linha = styled.View`
   border-bottom-width: 1px;
   padding-top: 10px;
 `
-export const Container = styled.ScrollView`
-  width: 90%;
-`
 
 export const Status = styled.Text`
   font-size: 16px;
