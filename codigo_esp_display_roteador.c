@@ -182,7 +182,7 @@ void IRAM_ATTR separarNumeroComposto(int numero) {
     }
 }
 
-void escreverTempoEmSegundos(int segundos) {
+void IRAM_ATTR escreverTempoEmSegundos(int segundos) {
 
     int h, m, s, resto;
     
@@ -316,19 +316,19 @@ void funcao_placar() {
 void IRAM_ATTR pistolaSensor() {
     Serial.println("pistolaSensor");
 
-/*    if(funcao == 2 && estado_display != 0 && tempo_inicial == 0 && tipo_acionamento_sensor == 0) {
+   if(funcao == 2 && estado_display != 0 && tempo_inicial == 0 && tipo_acionamento_sensor == 0) {
         tempo_inicial = millis();
         timestamp_ultimo_acionamento = millis();
         buzzer_simples = 1;
         acionar_buzzer = 1;
-    }*/
-
+    }
 }
 
 void IRAM_ATTR sensorInicialContador() {
+
     Serial.println("sensorInicialContador");
 
-   /* if(funcao == 2 && estado_display != 0) {
+   if(funcao == 2 && estado_display != 0) {
         if (tipo_acionamento_sensor == 1) {
             if(tempo_inicial == 0){
                 tempo_inicial = millis();
@@ -339,25 +339,25 @@ void IRAM_ATTR sensorInicialContador() {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
         }
-    }*/
+   }
 
 }
 
 void IRAM_ATTR sensorIntermediarioContador() {
     Serial.println("sensorIntermediarioContador");
-    /*if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
+
+    if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
         }
-    }*/
-
+    }
 }
 
 void IRAM_ATTR sensorFinalContador() {
 Serial.println("sensorFinalContador");
-   /* if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
+   if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
@@ -365,7 +365,7 @@ Serial.println("sensorFinalContador");
             sensores_finalizados = 1;
             acionar_buzzer = 1;
         }
-    }*/
+   }
 }
 
 void buzzer() {
@@ -463,10 +463,10 @@ void setup() {
 
     pinMode(pin_buzzer, OUTPUT);
 
-    attachInterrupt(pin_entrada_pistola, pistolaSensor, RISING);
-    attachInterrupt(pin_entrada_sensor_inicial, sensorInicialContador, RISING);
-    attachInterrupt(pin_entrada_sensor_intermediario, sensorIntermediarioContador, RISING);
-    attachInterrupt(pin_entrada_sensor_final, sensorFinalContador, RISING);
+    attachInterrupt(pin_entrada_pistola, pistolaSensor, FALLING);
+    attachInterrupt(pin_entrada_sensor_inicial, sensorInicialContador, FALLING);
+    attachInterrupt(pin_entrada_sensor_intermediario, sensorIntermediarioContador, FALLING);
+    attachInterrupt(pin_entrada_sensor_final, sensorFinalContador, FALLING);
 
     WiFi.softAP(ssid, password);
 
@@ -636,8 +636,6 @@ void setup() {
 }
 
 void loop() {
-
-    Serial.println("loop");
 
     if(acionar_buzzer) {
         buzzer();
