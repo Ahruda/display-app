@@ -463,10 +463,10 @@ void setup() {
 
     pinMode(pin_buzzer, OUTPUT);
 
-    attachInterrupt(pin_entrada_pistola, pistolaSensor, FALLING);
-    attachInterrupt(pin_entrada_sensor_inicial, sensorInicialContador, FALLING);
-    attachInterrupt(pin_entrada_sensor_intermediario, sensorIntermediarioContador, FALLING);
-    attachInterrupt(pin_entrada_sensor_final, sensorFinalContador, FALLING);
+    attachInterrupt(pin_entrada_pistola, pistolaSensor, RISING);
+    attachInterrupt(pin_entrada_sensor_inicial, sensorInicialContador, RISING);
+    attachInterrupt(pin_entrada_sensor_intermediario, sensorIntermediarioContador, RISING);
+    attachInterrupt(pin_entrada_sensor_final, sensorFinalContador, RISING);
 
     WiFi.softAP(ssid, password);
 
