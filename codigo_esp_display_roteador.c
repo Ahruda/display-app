@@ -8,25 +8,6 @@
 #include "ESPAsyncWebServer.h"
 #include "AsyncJson.h"
 
-
-// ---------------------------------------- Variaveis globais
-
-// Configurações de rede
-/*
-const char *ssid = "IFPCS_Container";
-const char *password = "containerIfPocos2018";
-
-const char *ssid = "GALBIERE";
-const char *password = "26106201";
-
-const char *ssid = "AP 22 2.4G";
-const char *password = "galbiere";
-
-const char *ssid = "leonardo";
-const char *password = "leonardo123";
-
-*/
-
 const char *ssid = "Display";
 const char *password = "leonardo";
 
@@ -84,7 +65,7 @@ JsonArray arraySensor = doc.to<JsonArray>();
 
 AsyncWebServer server(80);
 
-void escreverNumero(int numero) {
+void IRAM_ATTR escreverNumero(int numero) {
 
     switch (numero) {
 
@@ -193,9 +174,9 @@ void apagarDisplay() {
 
 }
 
-void separarNumeroComposto(int numero) {
-    for (int i = 0; i < 6; i++)
-    {
+void IRAM_ATTR separarNumeroComposto(int numero) {
+    numero = numero / 10;
+    for (int i = 0; i < 6; i++) {
         vetorNumeros[i] = numero % 10;
         numero /= 10;
     }
@@ -221,12 +202,7 @@ void escreverTempoEmSegundos(int segundos) {
 
 }
 
-void multiplexarDisplay() {
-/**
- * Essa função controla a multiplexação do display
- *
- * Enquanto a variavel estado_multiplexacao é 1, o while ficará ativo 
- */
+void IRAM_ATTR multiplexarDisplay() {
 
     apagarDisplay();
  
@@ -265,6 +241,7 @@ void standbyDisplay() {
 }
 
 void incrementarSegundos() {
+
     if(!pausar_cronometro){
         if (contador_decrescente == 1) {
             if(segundos != 0) {
@@ -275,8 +252,8 @@ void incrementarSegundos() {
         } else {
             segundos++;
         }
-        
     }
+
 }
 
 void funcao_cronometro() {
@@ -308,6 +285,7 @@ void funcao_cronometro() {
     }
     
     timerEnd(timer);
+    
 }
 
 void funcao_placar() {
@@ -338,7 +316,6 @@ void funcao_placar() {
 void IRAM_ATTR pistolaSensor() {
 
     if(funcao == 2 && estado_display != 0 && tempo_inicial == 0 && tipo_acionamento_sensor == 0) {
-        Serial.print("pistola");
         tempo_inicial = millis();
         timestamp_ultimo_acionamento = millis();
         buzzer_simples = 1;
@@ -352,13 +329,11 @@ void IRAM_ATTR sensorInicialContador() {
     if(funcao == 2 && estado_display != 0) {
         if (tipo_acionamento_sensor == 1) {
             if(tempo_inicial == 0){
-                Serial.print("sensor inicial");
                 tempo_inicial = millis();
                 buzzer_simples = 1;
                 acionar_buzzer = 1;
             }
         } else if(arraySensor.size() == 0) {
-            Serial.print("sensor inicial pistola");
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
         }
@@ -371,7 +346,6 @@ void IRAM_ATTR sensorIntermediarioContador() {
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
-            Serial.print("intermediario");
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
         }
@@ -384,7 +358,6 @@ void IRAM_ATTR sensorFinalContador() {
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
-            Serial.print("final");
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
             sensores_finalizados = 1;
@@ -496,8 +469,8 @@ void setup() {
     WiFi.softAP(ssid, password);
 
     IPAddress IP = WiFi.softAPIP();
-    Serial.print("AP IP address: ");
-    Serial.println(IP);
+    //Serial.print("AP IP address: ");
+    //Serial.println(IP);
 
     server.begin();
 
@@ -668,18 +641,15 @@ void loop() {
     
     if(estado_display == 0){
         standbyDisplay();
-    } else{
-        for (int i = 0; i < 6; i++) {
-            vetorNumeros[i] = numeroInicial;
-        }
-        segundos = 0;
+    } else {
+        
         switch (funcao) {
             case 1:
                 funcao_cronometro();
                 break;
             case 2:
                 if (tempo_inicial != 0 && sensores_finalizados == 0) {
-                    separarNumeroComposto((millis() - tempo_inicial)/10);
+                    separarNumeroComposto(millis() - tempo_inicial);
                     multiplexarDisplay();
                 } else if (sensores_finalizados == 1) {
                     separarNumeroComposto(arraySensor[arraySensor.size()-1]);
@@ -693,6 +663,10 @@ void loop() {
                 multiplexarDisplay();
                 break;
             default:
+                for (int i = 0; i < 6; i++) {
+                    vetorNumeros[i] = numeroInicial;
+                }
+                segundos = 0;
                 standbyDisplay();
                 break;
         }
