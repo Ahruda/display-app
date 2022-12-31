@@ -233,8 +233,7 @@ void standbyDisplay() {
         apagarDisplay();
         tempo = millis() + 1000;
 
-        while(tempo > millis()) {
-        }
+        while(tempo > millis()) { }
         
     }
 
@@ -257,6 +256,8 @@ void incrementarSegundos() {
 }
 
 void funcao_cronometro() {
+
+    digitalWrite(pin_bolinhas, HIGH);
 
     timer = timerBegin(0, 80, true);
 
@@ -286,6 +287,28 @@ void funcao_cronometro() {
     
     timerEnd(timer);
     
+}
+
+void funcao_sensor() {
+
+    digitalWrite(pin_bolinhas, HIGH);
+
+    while (funcao == 2 && estado_display != 0) {
+
+        multiplexarDisplay();
+
+        if (tempo_inicial != 0 && sensores_finalizados == 0) {
+            separarNumeroComposto(millis() - tempo_inicial);
+        } else if (sensores_finalizados == 1) {
+            separarNumeroComposto(arraySensor[arraySensor.size()-1]);
+        }
+
+        if(acionar_buzzer) {
+            buzzer();
+        }
+
+    }
+
 }
 
 void funcao_placar() {
@@ -326,8 +349,6 @@ void IRAM_ATTR pistolaSensor() {
 
 void IRAM_ATTR sensorInicialContador() {
 
-    Serial.println("sensorInicialContador");
-
    if(funcao == 2 && estado_display != 0) {
         if (tipo_acionamento_sensor == 1) {
             if(tempo_inicial == 0){
@@ -335,7 +356,7 @@ void IRAM_ATTR sensorInicialContador() {
                 buzzer_simples = 1;
                 acionar_buzzer = 1;
             }
-        } else if(arraySensor.size() == 0) {
+        } else if(arraySensor.size() == 0 && tempo_inicial != 0) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
         }
@@ -344,7 +365,6 @@ void IRAM_ATTR sensorInicialContador() {
 }
 
 void IRAM_ATTR sensorIntermediarioContador() {
-    Serial.println("sensorIntermediarioContador");
 
     if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
@@ -356,7 +376,7 @@ void IRAM_ATTR sensorIntermediarioContador() {
 }
 
 void IRAM_ATTR sensorFinalContador() {
-Serial.println("sensorFinalContador");
+
    if(funcao == 2 && estado_display != 0 && tempo_inicial != 0 && sensores_finalizados == 0) {
 
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
@@ -387,12 +407,15 @@ void buzzer() {
 
     } else {
 
+        separarNumeroComposto(arraySensor[arraySensor.size()-1]);
+
         for(int i = 0; i < 3; i++) {
             
             tempo = millis() + 500;
 
             digitalWrite(pin_buzzer, HIGH);
 
+            digitalWrite(pin_bolinhas, HIGH);
             while(tempo > millis()) {
                 multiplexarDisplay();
             }
@@ -400,6 +423,8 @@ void buzzer() {
             digitalWrite(pin_buzzer, LOW);
 
             apagarDisplay();
+            digitalWrite(pin_bolinhas, LOW);
+
             tempo = millis() + 500;
 
             while(tempo > millis()) { }
@@ -407,6 +432,7 @@ void buzzer() {
         }
 
     }
+
     buzzer_simples = 0;
 
 }
@@ -440,8 +466,6 @@ void buzzerCronometro() {
 
 void setup() {
 
-    Serial.begin(9600);
-   
     pinMode(pin_a, OUTPUT);
     pinMode(pin_b, OUTPUT);
     pinMode(pin_c, OUTPUT);
@@ -471,8 +495,6 @@ void setup() {
     WiFi.softAP(ssid, password);
 
     IPAddress IP = WiFi.softAPIP();
-    //Serial.print("AP IP address: ");
-    //Serial.println(IP);
 
     server.begin();
 
@@ -568,18 +590,6 @@ void setup() {
     });
     server.addHandler(modoCronometro);
 
-/*
-    AsyncCallbackJsonWebHandler *contadorDecrescente =
-    new AsyncCallbackJsonWebHandler("/modoCronometro", [](AsyncWebServerRequest *request, String json) {
-
-        segundos = 0;
-
-        request->send(200, "text/plain"); 
-
-    });
-    server.addHandler(contadorDecrescente);
-*/
-
     AsyncCallbackJsonWebHandler *iniciarSensores =
     new AsyncCallbackJsonWebHandler("/iniciarSensores", [](AsyncWebServerRequest *request, String json) {                             
 
@@ -637,39 +647,19 @@ void setup() {
 
 void loop() {
 
-    if(acionar_buzzer) {
-        buzzer();
-    }
-    
-    if(estado_display == 0){
+    if (estado_display == 0) {
         standbyDisplay();
-    } else {
-        
+    }
+    else {
         switch (funcao) {
             case 1:
                 funcao_cronometro();
                 break;
             case 2:
-                if (tempo_inicial != 0 && sensores_finalizados == 0) {
-                    separarNumeroComposto(millis() - tempo_inicial);
-                    multiplexarDisplay();
-                } else if (sensores_finalizados == 1) {
-                    separarNumeroComposto(arraySensor[arraySensor.size()-1]);
-                    multiplexarDisplay();
-                }
+                funcao_sensor();
                 break;
             case 3:
                 funcao_placar();
-                break;
-            case 4:
-                multiplexarDisplay();
-                break;
-            default:
-                for (int i = 0; i < 6; i++) {
-                    vetorNumeros[i] = numeroInicial;
-                }
-                segundos = 0;
-                standbyDisplay();
                 break;
         }
     }
