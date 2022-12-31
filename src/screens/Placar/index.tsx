@@ -21,10 +21,11 @@ export default function Placar() {
   const [timeB, setTimeB] = useState(0)
 
   useEffect(()=>{
-    updateDisplay
+    updateDisplay()
   },[timeA,timeB]);
 
   const updateDisplay = () => {
+
     axios
       .post(`http://${ip}/alterarNumerosPlacar`, {
         numero_1: timeB % 10,
@@ -38,6 +39,7 @@ export default function Placar() {
       if (response.status === 200) {
       }
     })
+    
   }
 
   const alterarTimeA = (numero: number) => {

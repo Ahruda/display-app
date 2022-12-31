@@ -5851,6 +5851,13 @@ react-native-date-picker@^4.2.5:
   dependencies:
     prop-types "^15.8.1"
 
+react-native-expo-fancy-alerts@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-expo-fancy-alerts/-/react-native-expo-fancy-alerts-2.1.1.tgz#2cf514d12ee8b0680e3ea4581113d486a1803876"
+  integrity sha512-oaB1Eyca0EeAiCbM7xMwyxMOjJA4bhMZCLoGKHIYXu5ZQAIn/h281wT+0g3fpGurBXDwn6P5uMx18q7dFFoC2A==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-gradle-plugin@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.0.6.tgz#b61a9234ad2f61430937911003cddd7e15c72b45"

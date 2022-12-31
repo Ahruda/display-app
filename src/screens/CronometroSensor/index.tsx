@@ -15,6 +15,7 @@ export default function CronometroSensor() {
   const [statusSensores, setStatusSensores] = useState(0) // 0 para sensores não finalizados
   const [statusRequisicao, setStatusRequisicao] = useState(0) // 1 para req em andamento
   const [tipoAcionamento, setTipoAcionamento] = useState('botao');
+  const [buttonState, setButtonState] = useState(false);
   
   function timeout(delay: number) {
     return new Promise( res => {
@@ -35,9 +36,14 @@ export default function CronometroSensor() {
   }
 
   const interromperSensores = () => {
+    
     if(funcao == 2 && estadoDisplay == 1){
-      axios.post(`http://${ip}/interromperSensores`, {})
-      .then(function (response) {
+      axios
+      .post(`http://${ip}/interromperSensores`, {})
+      .then(res => {
+          if (res.status === 200) {
+            setButtonState(true)
+          }
       })
     }
   }
@@ -64,21 +70,18 @@ export default function CronometroSensor() {
       .get(`http://${ip}/statusSensores`)
       .then(async function (response) {
 
-        console.log('entrou no timeout ' +estadoDisplay)
-        await timeout(2000);
-        console.log('saiu do timeout')
+        await timeout(1000);
 
         if (response.status === 200 && response.data["sensores_finalizados"] == 0) {
           verificarDadosSensores()
         } 
 
         if(response.data["sensores_finalizados"] == 1) {
-
+          setButtonState(false)
           axios
           .get(`http://${ip}/dadosSensores`)
           .then(function (response) {
             if (response.status === 200) {
-              console.log("ultima rotina---------------")
               setDadosSensor(response.data)
               setStatusSensores(1)        
               setStatusRequisicao(0)
@@ -136,6 +139,7 @@ export default function CronometroSensor() {
             </RadioButton.Group>
 
             <BotaoAtualizarDisplay
+              disable={buttonState}
               onPressFunction = {
                 statusSensores == 1 
                   ? iniciarSensores 
