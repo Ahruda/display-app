@@ -12,7 +12,7 @@ export const ContainerModal = styled.View`
   justify-content: center;
   position: absolute;
   background-color: #ffffff;
-  border-radius: 10;
+  border-radius: 10px;
   padding: 35px 0;
 `
 export const ModalInputs = styled.View`
@@ -24,11 +24,10 @@ export const ModalInputs = styled.View`
 export const TextInputTime = styled.Text`
   font-size: 36px;
   text-align: center;
-  border-radius: 5;
+  border-radius: 5px;
   padding: 10px;
   border-color: rgba(0, 0, 0, 0.2);
   border-width: 1;
-  //margin: 0px 5px ;
   width: 40px;
   font-family: 'seven-segment';
 `
@@ -40,7 +39,6 @@ export const ButtonInput = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
-  //border-width: 1;  
   font-size: 30px;
   width: 100%;
   height: 30px;
