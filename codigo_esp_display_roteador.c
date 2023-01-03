@@ -62,6 +62,7 @@ int vetorNumeros[6] = {1, 2, 3, 4, 5, 6};
 const size_t CAPACITY = JSON_ARRAY_SIZE(20);
 StaticJsonDocument<CAPACITY> doc;
 JsonArray arraySensor = doc.to<JsonArray>();
+String jsonArraySensor = "";
 
 AsyncWebServer server(80);
 
@@ -167,7 +168,7 @@ void IRAM_ATTR escreverNumero(int numero) {
 }
 
 void apagarDisplay() {
-    
+
     for (int i = 0; i < 6; i++) {
         digitalWrite(pin_displays[i], LOW);
     }
@@ -202,6 +203,26 @@ void IRAM_ATTR escreverTempoEmSegundos(int segundos) {
 
 }
 
+void IRAM_ATTR escreverTempoEmMili(int mili) {
+
+    int m, s, ms, resto;
+
+    m = mili / 60000;
+    resto = mili % 60000;
+    s = resto / 1000;
+    ms = resto % 1000;
+
+    vetorNumeros[0] = ms % 100;
+    vetorNumeros[1] = ms / 100;
+
+    vetorNumeros[2] = s % 100;
+    vetorNumeros[3] = s / 100;
+
+    vetorNumeros[4] = m % 100;
+    vetorNumeros[5] = m / 100;
+
+}
+
 void IRAM_ATTR multiplexarDisplay() {
 
     apagarDisplay();
@@ -226,11 +247,13 @@ void standbyDisplay() {
     while(estado_display == 0) {
         tempo = millis() + 1000;
 
+        digitalWrite(pin_bolinhas, HIGH);
         while(tempo > millis()) {
             multiplexarDisplay();
         }
         
         apagarDisplay();
+        digitalWrite(pin_bolinhas, LOW);
         tempo = millis() + 1000;
 
         while(tempo > millis()) { }
@@ -298,9 +321,11 @@ void funcao_sensor() {
         multiplexarDisplay();
 
         if (tempo_inicial != 0 && sensores_finalizados == 0) {
-            separarNumeroComposto(millis() - tempo_inicial);
+            escreverTempoEmMili(millis() - tempo_inicial);
         } else if (sensores_finalizados == 1) {
-            separarNumeroComposto(arraySensor[arraySensor.size()-1]);
+            escreverTempoEmMili(arraySensor[arraySensor.size()-1]);
+        } else if (tempo_inicial == 0) {
+            escreverTempoEmMili(0)
         }
 
         if(acionar_buzzer) {
@@ -337,7 +362,6 @@ void funcao_placar() {
 }
 
 void IRAM_ATTR pistolaSensor() {
-    Serial.println("pistolaSensor");
 
    if(funcao == 2 && estado_display != 0 && tempo_inicial == 0 && tipo_acionamento_sensor == 0) {
         tempo_inicial = millis();
@@ -359,6 +383,7 @@ void IRAM_ATTR sensorInicialContador() {
         } else if(arraySensor.size() == 0 && tempo_inicial != 0) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
+            serializeJson(arraySensor, jsonArraySensor);
         }
    }
 
@@ -371,6 +396,7 @@ void IRAM_ATTR sensorIntermediarioContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
+            serializeJson(arraySensor, jsonArraySensor);
         }
     }
 }
@@ -382,6 +408,7 @@ void IRAM_ATTR sensorFinalContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
+            serializeJson(arraySensor, jsonArraySensor);
             sensores_finalizados = 1;
             acionar_buzzer = 1;
         }
@@ -396,7 +423,6 @@ void buzzer() {
     if(buzzer_simples == 1) {
             
         tempo = millis() + 500;
-
         digitalWrite(pin_buzzer, HIGH);
 
         while(tempo > millis()) {
@@ -407,24 +433,21 @@ void buzzer() {
 
     } else {
 
-        separarNumeroComposto(arraySensor[arraySensor.size()-1]);
+        escreverTempoEmMili(arraySensor[arraySensor.size()-1]);
 
         for(int i = 0; i < 3; i++) {
             
             tempo = millis() + 500;
-
             digitalWrite(pin_buzzer, HIGH);
-
             digitalWrite(pin_bolinhas, HIGH);
+
             while(tempo > millis()) {
                 multiplexarDisplay();
             }
 
             digitalWrite(pin_buzzer, LOW);
-
             apagarDisplay();
             digitalWrite(pin_bolinhas, LOW);
-
             tempo = millis() + 500;
 
             while(tempo > millis()) { }
@@ -433,8 +456,8 @@ void buzzer() {
 
     }
 
+    digitalWrite(pin_bolinhas, HIGH);
     buzzer_simples = 0;
-
 }
 
 void buzzerCronometro() {
@@ -446,7 +469,6 @@ void buzzerCronometro() {
     for(int i = 0; i < 3; i++) {
         
         tempo = millis() + 500;
-
         digitalWrite(pin_buzzer, HIGH);
 
         while(tempo > millis()) {
@@ -454,7 +476,6 @@ void buzzerCronometro() {
         }
 
         digitalWrite(pin_buzzer, LOW);
-
         apagarDisplay();
         tempo = millis() + 500;
 
@@ -624,10 +645,7 @@ void setup() {
 
     server.on("/dadosSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
 
-        String json = "";
-
-        serializeJson(arraySensor, json);
-        request->send(200, "application/json", json);
+        request->send(200, "application/json", arraySensor);
 
     });
 
