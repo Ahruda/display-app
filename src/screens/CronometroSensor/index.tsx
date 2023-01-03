@@ -115,7 +115,7 @@ export default function CronometroSensor() {
   const formatarDadosSensores = (mili: any) => {
 
     let m, resto, s, ms
-    let vetorNumeros = {}
+    let vetorNumeros = []
 
     m = mili / 60000;
     resto = mili % 60000;
@@ -134,10 +134,10 @@ export default function CronometroSensor() {
     let msg
 
     msg = ((vetorNumeros[5] === 0 ? '0' :  Math.trunc(vetorNumeros[5])) + "" + (vetorNumeros[4] === 0 ? '0' :  Math.trunc(vetorNumeros[4])))
-    msg += ":" + ((vetorNumeros[3] === 0 ? '0' :  Math.trunc(vetorNumeros[3])) + "" + (vetorNumeros[2] === 0 ? '0' :  Math.trunc(vetorNumeros[2])))
-    msg += ":" + ((vetorNumeros[1] === 0 ? '0' :  Math.trunc(vetorNumeros[1])) + "" + (vetorNumeros[0] === 0 ? '00' :  Math.trunc(vetorNumeros[0])))
+    msg += "min " + ((vetorNumeros[3] === 0 ? '0' :  Math.trunc(vetorNumeros[3])) + "" + (vetorNumeros[2] === 0 ? '0' :  Math.trunc(vetorNumeros[2])))
+    msg += "s " + ((vetorNumeros[1] === 0 ? '0' :  Math.trunc(vetorNumeros[1])) + "" + (vetorNumeros[0] === 0 ? '00' :  Math.trunc(vetorNumeros[0])))
 
-    return msg
+    return msg+"ms"
   }
 
   return (
@@ -194,23 +194,6 @@ export default function CronometroSensor() {
               padding: 10,
             }}
           >
-
-          {/* <ActivityIndicator
-              size="large"
-              color="#0000ff"
-              style={{ paddingRight: 10 }}
-            /> */}
-
-          {/*
-          <Status>Status: </Status>  
-
-          {(funcao == 2 && estadoDisplay == 1 && statusRequisicao == 1) 
-            ? (statusSensores == 1 )
-              ? <Status>Sensores Finalizados!</Status> 
-              : <Status>Coletando dados...</Status>
-            : <Status>Sensores desabilitados!</Status>}
-
-          */}
           </View>
 
           <SubTitulo>Dados dos sensores</SubTitulo>
@@ -218,13 +201,13 @@ export default function CronometroSensor() {
             {dadosSensor.map((item, index) => {
               return (
                 <Linha key={index + 1}>
-                  <Text>Sensor #{index + 1}</Text>
-                  <Text>{formatarDadosSensores(item)}</Text>
+                  <Text style={{fontWeight:'400', fontSize:16}}>Sensor #{index + 1}</Text>
+                  <Text style={{fontWeight:'400', fontSize:16}}>{formatarDadosSensores(item)}</Text>
                 </Linha>
               )
             })}
           </TabelaDados>
-        </>
+        </> 
       </Container>
     </View>
   )

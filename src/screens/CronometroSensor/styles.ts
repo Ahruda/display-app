@@ -6,7 +6,7 @@ export const ContainerModal = styled.View`
   position: absolute;
   top: '50%';
   left: '50%';
-  height: 180;
+  height: 180px;
   width: width * 0.8;
   background-color: #fff;
   border-radius: 7px;

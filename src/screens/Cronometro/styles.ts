@@ -27,7 +27,7 @@ export const TextInputTime = styled.Text`
   border-radius: 5px;
   padding: 10px;
   border-color: rgba(0, 0, 0, 0.2);
-  border-width: 1;
+  border-width: 1px;
   width: 40px;
   font-family: 'seven-segment';
 `
