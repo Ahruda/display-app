@@ -383,6 +383,7 @@ void IRAM_ATTR sensorInicialContador() {
         } else if(arraySensor.size() == 0 && tempo_inicial != 0) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
+            jsonArraySensor = "";
             serializeJson(arraySensor, jsonArraySensor);
         }
    }
@@ -396,6 +397,7 @@ void IRAM_ATTR sensorIntermediarioContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
+            jsonArraySensor = "";
             serializeJson(arraySensor, jsonArraySensor);
         }
     }
@@ -408,6 +410,7 @@ void IRAM_ATTR sensorFinalContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
+            jsonArraySensor = "";
             serializeJson(arraySensor, jsonArraySensor);
             sensores_finalizados = 1;
             acionar_buzzer = 1;
