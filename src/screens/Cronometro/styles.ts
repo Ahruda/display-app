@@ -6,14 +6,13 @@ export const ViewWrapper = styled.View`
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.6);
 `
-
 export const ContainerModal = styled.View`
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   background-color: #ffffff;
-  border-radius: 10;
+  border-radius: 10px;
   padding: 35px 0;
 `
 export const ModalInputs = styled.View`
@@ -25,16 +24,13 @@ export const ModalInputs = styled.View`
 export const TextInputTime = styled.Text`
   font-size: 36px;
   text-align: center;
-  border-radius: 5;
+  border-radius: 5px;
   padding: 10px;
   border-color: rgba(0, 0, 0, 0.2);
   border-width: 1;
-  //margin: 0px 5px ;
   width: 40px;
   font-family: 'seven-segment';
-
 `
-
 export const ButtonInput = styled.TouchableOpacity`
   background-color: #2c8af2;
   margin: 5px;
@@ -43,14 +39,12 @@ export const ButtonInput = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
-  //border-width: 1;  
   font-size: 30px;
   width: 100%;
   height: 30px;
   padding: 0px;
   border-radius: 5px;
 `
-
 export const ModalButtons = styled.View`
   display: flex;
   flex-direction: row;
@@ -58,18 +52,15 @@ export const ModalButtons = styled.View`
   align-items: center;
   padding: 0 25px;
 `
-
 export const TextDecimal = styled.Text`
   font-size: 26px;
 `
-
 export const TextoDigito = styled.Text`
   color: white;
   font-size: 36px;
   position: absolute;
   font-family: 'seven-segment';
 `
-
 export const ContainerNumero = styled.View`
   display: flex;
   flex-direction: column;

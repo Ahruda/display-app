@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "display-app",
+    "name": "Display App",
     "slug": "display-app",
     "version": "1.0.0",
     "assetBundlePatterns": [
@@ -8,6 +8,9 @@
     ],
     "android": {
       "package": "com.display.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.display.app"
     }
   }
 }

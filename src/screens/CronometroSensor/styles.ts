@@ -9,7 +9,7 @@ export const ContainerModal = styled.View`
   height: 180;
   width: width * 0.8;
   background-color: #fff;
-  border-radius: 7;
+  border-radius: 7px;
 `
 
 export const Linha = styled.View`

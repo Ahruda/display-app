@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useEffect } from 'react'
 import { createContext, useState } from 'react'
-import { ToastAndroid } from 'react-native'
 
 interface configContextProps {
   funcao: number
@@ -20,23 +19,11 @@ export function ConfigProvider({ children }: any) {
   const [estadoDisplay, setEstadoDisplay] = useState(0)
   const [ip, setIp] = useState('192.168.004.001')
 
-  const showToast = (mensagem: string) => {
-    ToastAndroid.show(mensagem, ToastAndroid.SHORT)
-  }
-
   const zerarDisplay = () => {
     axios
     .post(`http://${ip}/alterarfuncao`, {
       "estado_display": 0,
       "funcao": 0
-    })
-    .then(function (response) {
-      if (response.status === 200) {
-        
-      }
-    })
-    .catch(function (error) {
-      showToast("Ocorreu um erro ao realizar a mudança de estado")
     })
   }
 
@@ -45,14 +32,6 @@ export function ConfigProvider({ children }: any) {
     .post(`http://${ip}/alterarfuncao`, {
       "estado_display": estadoDisplay,
       "funcao": funcao
-    })
-    .then(function (response) {
-      if (response.status === 200) {
-        
-      }
-    })
-    .catch(function (error) {
-      showToast("Ocorreu um erro ao realizar a mudança de estado")
     })
   }, [funcao, estadoDisplay])
 
