@@ -325,7 +325,7 @@ void funcao_sensor() {
         } else if (sensores_finalizados == 1) {
             escreverTempoEmMili(arraySensor[arraySensor.size()-1]);
         } else if (tempo_inicial == 0) {
-            escreverTempoEmMili(0)
+            escreverTempoEmMili(0);
         }
 
         if(acionar_buzzer) {
@@ -645,7 +645,7 @@ void setup() {
 
     server.on("/dadosSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
 
-        request->send(200, "application/json", arraySensor);
+        request->send(200, "application/json", jsonArraySensor);
 
     });
 
