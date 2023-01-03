@@ -205,21 +205,19 @@ void IRAM_ATTR escreverTempoEmSegundos(int segundos) {
 
 void IRAM_ATTR escreverTempoEmMili(int mili) {
 
-    int m, s, ms, resto;
-
     m = mili / 60000;
     resto = mili % 60000;
     s = resto / 1000;
     ms = resto % 1000;
 
-    vetorNumeros[0] = ms % 100;
+    vetorNumeros[0] = (ms % 100) / 10;
     vetorNumeros[1] = ms / 100;
 
-    vetorNumeros[2] = s % 100;
-    vetorNumeros[3] = s / 100;
+    vetorNumeros[2] = s % 10;
+    vetorNumeros[3] = s / 10;
 
-    vetorNumeros[4] = m % 100;
-    vetorNumeros[5] = m / 100;
+    vetorNumeros[4] = m % 10;
+    vetorNumeros[5] = m / 10;
 
 }
 
@@ -383,7 +381,7 @@ void IRAM_ATTR sensorInicialContador() {
         } else if(arraySensor.size() == 0 && tempo_inicial != 0) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
-            jsonArraySensor = "[]";
+            jsonArraySensor = "";
             serializeJson(arraySensor, jsonArraySensor);
         }
    }
@@ -397,7 +395,7 @@ void IRAM_ATTR sensorIntermediarioContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
-            jsonArraySensor = "[]";
+            jsonArraySensor = "";
             serializeJson(arraySensor, jsonArraySensor);
         }
     }
@@ -410,7 +408,7 @@ void IRAM_ATTR sensorFinalContador() {
         if ((millis() - timestamp_ultimo_acionamento) >= tempo_debounce) {
             timestamp_ultimo_acionamento = millis();
             arraySensor.add((timestamp_ultimo_acionamento - tempo_inicial));
-            jsonArraySensor = "[]";
+            jsonArraySensor = "";
             serializeJson(arraySensor, jsonArraySensor);
             sensores_finalizados = 1;
             acionar_buzzer = 1;
