@@ -289,6 +289,10 @@ void funcao_cronometro() {
 
     timerAlarmEnable(timer);
 
+    for (int i = 0; i < 6; i++) {
+        vetorNumeros[i] = 0;
+    }
+
     while(funcao == 1 && estado_display != 0) {
 
         escreverTempoEmSegundos(segundos);
@@ -540,6 +544,11 @@ void setup() {
         buzzer_cronometro = 0;
         pausar_cronometro = 1;
         contador_decrescente = 0;
+        segundos = 0;
+
+        for (int i = 0; i < 6; i++) {
+            vetorNumeros[i] = 0;
+        }
         
         request->send(200, "text/plain"); 
 
