@@ -205,6 +205,8 @@ void IRAM_ATTR escreverTempoEmSegundos(int segundos) {
 
 void IRAM_ATTR escreverTempoEmMili(int mili) {
 
+    int m, s, ms, resto;
+
     m = mili / 60000;
     resto = mili % 60000;
     s = resto / 1000;
