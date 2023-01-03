@@ -653,7 +653,10 @@ void setup() {
 
     server.on("/dadosSensores", HTTP_GET, [](AsyncWebServerRequest *request) {
 
-        request->send(200, "application/json", jsonArraySensor);
+        String json = "";
+        serializeJson(arraySensor, json);
+        request->send(200, "application/json", json);
+
 
     });
 
