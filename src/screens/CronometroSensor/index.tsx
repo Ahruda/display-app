@@ -112,6 +112,34 @@ export default function CronometroSensor() {
     })
   }
 
+  const formatarDadosSensores = (mili: any) => {
+
+    let m, resto, s, ms
+    let vetorNumeros = {}
+
+    m = mili / 60000;
+    resto = mili % 60000;
+    s = resto / 1000;
+    ms = resto % 1000;
+
+    vetorNumeros[0] = (ms % 100);
+    vetorNumeros[1] = ms / 100;
+
+    vetorNumeros[2] = s % 10;
+    vetorNumeros[3] = s / 10;
+
+    vetorNumeros[4] = m % 10;
+    vetorNumeros[5] = m / 10;
+
+    let msg
+
+    msg = ((vetorNumeros[5] === 0 ? '0' :  Math.trunc(vetorNumeros[5])) + "" + (vetorNumeros[4] === 0 ? '0' :  Math.trunc(vetorNumeros[4])))
+    msg += ":" + ((vetorNumeros[3] === 0 ? '0' :  Math.trunc(vetorNumeros[3])) + "" + (vetorNumeros[2] === 0 ? '0' :  Math.trunc(vetorNumeros[2])))
+    msg += ":" + ((vetorNumeros[1] === 0 ? '0' :  Math.trunc(vetorNumeros[1])) + "" + (vetorNumeros[0] === 0 ? '00' :  Math.trunc(vetorNumeros[0])))
+
+    return msg
+  }
+
   return (
     <View
       style={{
@@ -188,11 +216,10 @@ export default function CronometroSensor() {
           <SubTitulo>Dados dos sensores</SubTitulo>
           <TabelaDados>
             {dadosSensor.map((item, index) => {
-              let itemString = item.toString()
               return (
                 <Linha key={index + 1}>
                   <Text>Sensor #{index + 1}</Text>
-                  <Text>{itemString.substring(itemString.length - 3, 0) + "." + itemString.substring(itemString.length, itemString.length - 3)}s</Text>
+                  <Text>{formatarDadosSensores(item)}</Text>
                 </Linha>
               )
             })}
