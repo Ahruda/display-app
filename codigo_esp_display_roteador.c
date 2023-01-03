@@ -470,18 +470,22 @@ void buzzerCronometro() {
         
         tempo = millis() + 500;
         digitalWrite(pin_buzzer, HIGH);
+        digitalWrite(pin_bolinhas, HIGH);
 
         while(tempo > millis()) {
             multiplexarDisplay();
         }
 
         digitalWrite(pin_buzzer, LOW);
+        digitalWrite(pin_bolinhas, LOW);
         apagarDisplay();
         tempo = millis() + 500;
 
         while(tempo > millis()) { }
 
     }
+
+    digitalWrite(pin_bolinhas, HIGH);
 
 }
 
@@ -616,6 +620,7 @@ void setup() {
 
         tempo_inicial = 0;
         arraySensor.clear();
+        jsonArraySensor = "";
         sensores_finalizados = 0;
         
         request->send(200, "text/plain"); 
